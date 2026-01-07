@@ -1,12 +1,21 @@
 #!/usr/bin/env python
-"""Django's command-line utility for administrative tasks."""
+"""Django's command-line utility for administrative tasks.
+
+Render expects manage.py at the repository root.
+"""
 import os
 import sys
+from pathlib import Path
 
 
-def main():
-    """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'plan2d_site.settings')
+def main() -> None:
+    repo_root = Path(__file__).resolve().parent
+    project_root = repo_root / "plan2d_site"
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
+
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "plan2d_site.settings")
+
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
@@ -15,8 +24,9 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
+
     execute_from_command_line(sys.argv)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

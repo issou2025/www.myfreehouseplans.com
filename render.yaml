@@ -5,23 +5,19 @@ services:
     plan: starter
     region: frankfurt
     autoDeploy: true
-    buildCommand: |
-      pip install -r requirements.txt
-      cd plan2d_site
-      python manage.py collectstatic --noinput --settings=config.settings.prod
-      python manage.py migrate --noinput --settings=config.settings.prod
-    startCommand: |
-      cd plan2d_site
-      gunicorn config.wsgi:application
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: gunicorn plan2d_site.wsgi:application
     envVars:
       - key: DJANGO_SETTINGS_MODULE
-        value: config.settings.prod
+        value: plan2d_site.settings
       - key: DEBUG
         value: "False"
       - key: SECRET_KEY
-        value: glehwvuv)tb%7gmgg-zlafxq)s&!o&uss6)h=2r#(593=y$f&p
+        generateValue: true
       - key: ALLOWED_HOSTS
         value: "www.myfreehouseplans.com,.onrender.com"
+      - key: PYTHONUNBUFFERED
+        value: "1"
       - key: DATABASE_URL
         fromDatabase:
           name: myfreehouseplans-db
