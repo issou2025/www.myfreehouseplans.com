@@ -19,7 +19,7 @@ services:
       - key: DEBUG
         value: "False"
       - key: SECRET_KEY
-        generateValue: true
+        value: glehwvuv)tb%7gmgg-zlafxq)s&!o&uss6)h=2r#(593=y$f&p
       - key: ALLOWED_HOSTS
         value: "www.myfreehouseplans.com,.onrender.com"
       - key: DATABASE_URL
