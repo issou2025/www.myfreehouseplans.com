@@ -1,0 +1,643 @@
+{% extends 'base.html' %}
+{% block title %}{{ plan.get_seo_title }}{% endblock %}
+
+{% block og_title %}{{ plan.get_seo_title }}{% endblock %}
+{% block twitter_title %}{{ plan.get_seo_title }}{% endblock %}
+
+{% block meta_description %}{{ plan.get_seo_description }}{% endblock %}
+
+{% block og_description %}{{ plan.get_seo_description }}{% endblock %}
+{% block twitter_description %}{{ plan.get_seo_description }}{% endblock %}
+
+{% block meta_keywords %}{{ plan.get_seo_keywords }}{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "{{ plan.title|escapejs }}",
+    "sku": "{{ plan.reference|escapejs }}",
+    "description": "{{ plan.get_seo_description|escapejs }}",
+    "brand": {
+        "@type": "Brand",
+        "name": "{{ brand_name|escapejs }}"
+    },
+    "url": "{{ site_base_url }}{{ request.path }}"{% if floor_plan_image and floor_plan_image.image %},
+    "image": ["{{ site_base_url }}{{ floor_plan_image.image.url }}"]{% endif %}{% if plan.has_paid_pdf_offer or plan.has_pro_pack %},
+    "offers": [
+        {% if plan.has_paid_pdf_offer %}
+        {
+            "@type": "Offer",
+            "name": "Pack 2 ZIP",
+            "url": "{{ plan.pack_2_gumroad_zip_url|escapejs }}",
+            "priceCurrency": "USD",
+            "price": "{{ plan.price }}",
+            "availability": "https://schema.org/InStock"
+        }{% endif %}{% if plan.has_pro_pack %}{% if plan.has_paid_pdf_offer %},{% endif %}
+        {
+            "@type": "Offer",
+            "name": "Pack 3 ZIP",
+            "url": "{{ plan.pack_3_gumroad_zip_url|escapejs }}",
+            "priceCurrency": "USD",
+            "price": "{{ plan.pack_3_price }}",
+            "availability": "https://schema.org/InStock"
+        }{% endif %}
+    ]{% endif %}
+}
+</script>
+{% endblock %}
+
+{% block content %}
+        <header class="mb-3">
+            <h1 class="h3 mb-1">{{ plan.title }}</h1>
+            <div class="text-muted" style="font-size: var(--text-sm);">
+                {{ plan.bedrooms }} bed • {{ plan.bathrooms }} bath • {{ plan.total_area_sqm|default_if_none:"-" }} m² / {{ plan.total_area_sqft|floatformat:0|default_if_none:"-" }} ft² • Ref: {{ plan.reference }}
+            </div>
+        </header>
+        <div class="row g-3">
+            <div class="col-lg-8">
+                <!-- Header Section: Plan preview(s) with zoom -->
+                <div class="plan-preview mb-3">
+                    <div class="row g-3 align-items-start">
+                        <div class="col-lg-8">
+                            {% if floor_plan_image %}
+                                <div class="plan-preview__frame position-relative" style="background: var(--color-surface); border: 1px solid var(--color-gray-200); border-radius: var(--radius-lg); padding: var(--space-3);">
+                                    <img
+                                        src="{{ floor_plan_image.image.url }}"
+                                        alt="{{ plan.title }} floor plan preview"
+                                        loading="eager"
+                                        decoding="async"
+                                        data-zoom-src="{{ floor_plan_image.image.url }}"
+                                        class="js-zoomable w-100"
+                                        style="cursor: zoom-in;"
+                                    >
+                                    <div class="plan-preview__toolbar">
+                                        <button type="button" class="btn btn-outline-primary btn-sm js-open-zoom" data-bs-toggle="modal" data-bs-target="#planImageModal" data-img-src="{{ floor_plan_image.image.url }}">
+                                            <i class="bi bi-zoom-in"></i> Zoom
+                                        </button>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="d-flex align-items-center justify-content-center" style="min-height: 260px; background: var(--color-gray-50); border-radius: var(--radius-lg);">
+                                    <span class="text-muted">No plan preview available</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="plan-at-glance-card h-100" style="background: linear-gradient(135deg, #F8FAFC 0%, #EEF2FF 100%); border: 1px solid var(--color-gray-200); border-radius: var(--radius-xl); padding: var(--space-4);">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <h2 class="h5 mb-0">Plan at a glance</h2>
+                                    <span class="badge bg-light text-muted" style="font-size: var(--text-xs); letter-spacing: 0.05em;">
+                                        Ref: {{ plan.reference }}
+                                    </span>
+                                </div>
+                                <div class="plan-at-glance-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--space-3);">
+                                    <div>
+                                        <div class="text-muted small">Total area</div>
+                                        <strong>{{ plan.total_area_sqm|default_if_none:"-" }} m² / {{ plan.total_area_sqft|floatformat:0|default_if_none:"-" }} ft²</strong>
+                                    </div>
+                                    <div>
+                                        <div class="text-muted small">Bedrooms</div>
+                                        <strong>{{ plan.bedrooms|default_if_none:"-" }}</strong>
+                                    </div>
+                                    <div>
+                                        <div class="text-muted small">Bathrooms</div>
+                                        <strong>{{ plan.bathrooms|default_if_none:"-" }}</strong>
+                                    </div>
+                                    <div>
+                                        <div class="text-muted small">Floors</div>
+                                        <strong>{{ plan.floors|default:"—" }}</strong>
+                                    </div>
+                                    <div>
+                                        <div class="text-muted small">Construction type</div>
+                                        <strong>{{ plan.get_plan_type_display|default:plan.category.name }}</strong>
+                                    </div>
+                                </div>
+                                <p class="small text-muted mt-2 mb-0">
+                                    <i class="bi bi-eye"></i> Key stats grouped for a five-second read.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plan readability: additional images (click to zoom) -->
+                {% if gallery_images %}
+                <div class="dossier-section mb-4">
+                    <div class="dossier-section__header">
+                        <h2 class="dossier-section__title">Plan Details Gallery</h2>
+                        <p class="text-muted mb-0" style="font-size: var(--text-sm);">Click any image to view full size</p>
+                    </div>
+                    <div class="dossier-section__body">
+                        <div class="plan-gallery-grid">
+                            {% for image in gallery_images %}
+                            <div class="plan-gallery-item"
+                                data-bs-toggle="modal"
+                                data-bs-target="#planImageModal"
+                                data-img-src="{{ image.image.url }}"
+                                role="button"
+                                tabindex="0"
+                                aria-label="View {{ image.get_image_type_display }}">
+                                <img src="{{ image.image.url }}" 
+                                     alt="{{ image.get_image_type_display }}" 
+                                     loading="lazy" 
+                                     decoding="async">
+                                <div class="plan-gallery-label">
+                                    {{ image.get_image_type_display }}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Mobile zoom hint -->
+                        <div class="pinch-zoom-hint d-md-none mt-3">
+                            <i class="bi bi-zoom-in"></i>
+                            <span>Pinch to zoom on images</span>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% with free_image=plan.free_3d_image %}
+                {% if free_image or render_3d_image %}
+                <div class="dossier-section mb-4">
+                    <div class="dossier-section__header">
+                        <h2 class="dossier-section__title">3D preview (free)</h2>
+                        <p class="text-muted mb-0" style="font-size: var(--text-sm);">Visualization only – no dimensions, no scale indicators.</p>
+                    </div>
+                    <div class="dossier-section__body">
+                        <div class="row g-3 align-items-start">
+                            <div class="col-md-8">
+                                {% if free_image %}
+                                    {% with preview_url=free_image.url %}
+                                    <img
+                                        src="{{ preview_url }}"
+                                        alt="{{ plan.title }} free 3D preview"
+                                        class="w-100 js-zoomable"
+                                        style="max-height: 320px; object-fit: contain; background: var(--color-surface); border: 1px solid var(--color-gray-200); border-radius: var(--radius-lg); cursor: zoom-in;"
+                                        loading="lazy"
+                                        decoding="async"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#planImageModal"
+                                        data-img-src="{{ preview_url }}"
+                                    >
+                                    {% endwith %}
+                                {% else %}
+                                    {% with preview_url=render_3d_image.image.url %}
+                                    <img
+                                        src="{{ preview_url }}"
+                                        alt="{{ plan.title }} free 3D preview"
+                                        class="w-100 js-zoomable"
+                                        style="max-height: 320px; object-fit: contain; background: var(--color-surface); border: 1px solid var(--color-gray-200); border-radius: var(--radius-lg); cursor: zoom-in;"
+                                        loading="lazy"
+                                        decoding="async"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#planImageModal"
+                                        data-img-src="{{ preview_url }}"
+                                    >
+                                    {% endwith %}
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                {% if plan.free_3d_caption %}
+                                    <p class="mb-2">{{ plan.free_3d_caption }}</p>
+                                {% elif render_3d_image and render_3d_image.caption %}
+                                    <p class="mb-2">{{ render_3d_image.caption }}</p>
+                                {% else %}
+                                    <p class="mb-2 text-muted">This 3D preview is a complimentary visual to build trust and understanding – dimensions stay hidden until you purchase the build-ready set.</p>
+                                {% endif %}
+                                <div class="alert alert-info mb-0" role="status">
+                                    <i class="bi bi-info-circle"></i>
+                                    <span>Free visualization only. No technical data or scaling cues.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                <!-- Plan Specifications -->
+                <div class="dossier-section mb-4">
+                    <div class="dossier-section__header">
+                        <h2 class="dossier-section__title">Plan Specifications</h2>
+                        <p class="text-muted mb-0" style="font-size: var(--text-sm);">Concise technical data for quick review.</p>
+                    </div>
+                    <div class="dossier-section__body">
+                        <div class="plan-dossier-specs plan-dossier-specs--compact">
+                            <div class="plan-dossier-spec"><span>Total area (m²)</span><strong>{{ plan.total_area_sqm|default_if_none:"-" }}</strong></div>
+                            <div class="plan-dossier-spec"><span>Total area (ft²)</span><strong>{{ plan.total_area_sqft|floatformat:0|default_if_none:"-" }}</strong></div>
+                            <div class="plan-dossier-spec"><span>Bedrooms</span><strong>{{ plan.bedrooms|default_if_none:"-" }}</strong></div>
+                            <div class="plan-dossier-spec"><span>Bathrooms</span><strong>{{ plan.bathrooms|default_if_none:"-" }}</strong></div>
+                            <div class="plan-dossier-spec"><span>Floors</span><strong>{{ plan.floors|default:"-" }}</strong></div>
+                            <div class="plan-dossier-spec"><span>Suggested plot size</span><strong>{{ plan.suggested_plot_size|default:"Not specified" }}</strong></div>
+                            <div class="plan-dossier-spec"><span>Roof type</span><strong>{{ plan.roof_type|default:"Not specified" }}</strong></div>
+                            <div class="plan-dossier-spec"><span>Wall system</span><strong>{{ plan.wall_system|default:"Not specified" }}</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                {% with pack_config=plan.pack_config %}
+                {% with has_revit=plan.has_revit_offer has_ifc=plan.has_ifc_offer has_dwg=plan.has_dwg_asset %}
+                <div class="dossier-section mb-4" id="plan-files-packs">
+                    <div class="dossier-section__header">
+                        <h2 class="dossier-section__title">Plan Files &amp; Packs</h2>
+                        <p class="text-muted mb-0" style="font-size: var(--text-sm);">Every downloadable and purchasable file, organized by pack tier.</p>
+                    </div>
+                    <div class="dossier-section__body">
+                        <div class="plan-versions {% if plan.has_pro_pack and has_revit or plan.has_pro_pack and has_ifc or plan.has_pro_pack and has_dwg %}has-pro-pack{% endif %}">
+                            <!-- Free Version -->
+                            <div class="plan-version plan-version--free">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-success-subtle text-success">{{ plan.PACK_DISPLAY_LABELS.free }}</span>
+                                    <span class="text-muted" style="font-size: 0.7rem;">Orientation tools</span>
+                                </div>
+                                <h3>Free layout preview</h3>
+                                <p class="text-muted">Ideal for understanding circulation and zoning before committing.</p>
+                                <ul>
+                                    <li>Functional layout visible at a glance</li>
+                                    <li>Room zoning clearly labeled</li>
+                                    <li>Circulation logic easy to follow</li>
+                                    <li><strong>No dimensions or construction data</strong></li>
+                                    <li>Gentle watermark for sharing</li>
+                                </ul>
+                                <div class="plan-pack-files">
+                                    <div class="plan-pack-files__item">
+                                        <div class="plan-pack-files__icon">
+                                            <i class="bi bi-file-earmark-text"></i>
+                                        </div>
+                                        <div>
+                                            <div class="plan-pack-files__title">Layout preview (PDF)</div>
+                                            <div class="plan-pack-files__meta">Zoning overview for conversations and internal reviews</div>
+                                        </div>
+                                    </div>
+                                    <div class="plan-pack-files__item">
+                                        <div class="plan-pack-files__icon">
+                                            <i class="bi bi-share"></i>
+                                        </div>
+                                        <div>
+                                            <div class="plan-pack-files__title">Share-safe sheet</div>
+                                            <div class="plan-pack-files__meta">Watermark keeps it clearly marked as a preview</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="plan-version__cta">
+                                    {% if plan.has_free_plan %}
+                                        <a href="{{ plan.free_plan_file.url }}" class="btn btn-outline-success w-100" download>
+                                            <i class="bi bi-download"></i> Download free layout
+                                        </a>
+                                        <div class="plan-watermark-notice">
+                                            <i class="bi bi-info-circle"></i>
+                                            <span>Preview only. Use for orientation, not construction.</span>
+                                        </div>
+                                    {% else %}
+                                        <button class="btn btn-outline-secondary w-100" disabled>Free layout not available</button>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Standard Pack -->
+                            <div class="plan-version plan-version--paid">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-primary-subtle text-primary">{{ plan.PACK_DISPLAY_LABELS.standard }}</span>
+                                    <span class="text-muted" style="font-size: 0.7rem;">Build-ready set</span>
+                                </div>
+                                <h3>Construction PDFs</h3>
+                                <p class="text-muted">Complete, dimensioned documents for site work and coordination.</p>
+                                <ul>
+                                    <li><strong>Full dimensions throughout</strong></li>
+                                    <li>Wall thicknesses and symbols standardized</li>
+                                    <li>Door and window schedules noted</li>
+                                    <li>Construction-ready annotations</li>
+                                    <li>No watermarks or previews</li>
+                                </ul>
+                                <div class="plan-pack-files">
+                                    <div class="plan-pack-files__item">
+                                        <div class="plan-pack-files__icon">
+                                            <i class="bi bi-file-earmark-lock"></i>
+                                        </div>
+                                        <div>
+                                            <div class="plan-pack-files__title">Dimensioned PDF package</div>
+                                            <div class="plan-pack-files__meta">
+                                                        {% if plan.pack_2_gumroad_zip_url %}
+                                                            One ZIP includes Metric + Imperial
+                                                        {% else %}
+                                                            Delivered via Gumroad
+                                                        {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="plan-pack-files__item">
+                                        <div class="plan-pack-files__icon">
+                                            <i class="bi bi-card-checklist"></i>
+                                        </div>
+                                        <div>
+                                            <div class="plan-pack-files__title">Schedules &amp; notes</div>
+                                            <div class="plan-pack-files__meta">Doors, windows, wall tags, and coordination callouts</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if plan.has_paid_pdf_offer %}
+                                    <div class="plan-version__cta">
+                                        <a href="{{ plan.pack_2_gumroad_zip_url }}" class="btn btn-primary w-100" rel="noopener">
+                                            <i class="bi bi-lock-fill"></i> Buy Pack 2 ZIP
+                                        </a>
+                                        <div class="text-center mt-1" style="font-size: 0.7rem; color: #6c757d;">
+                                            <strong>One ZIP. Two standards. Designed for international professionals.</strong>
+                                        </div>
+                                        <div class="text-center mt-2" style="font-size: 1.5rem; font-weight: 700; color: var(--color-primary);">
+                                            ${{ plan.price }}
+                                        </div>
+                                        <div class="text-center text-muted" style="font-size: 0.7rem;">
+                                            One-time payment • instant download
+                                        </div>
+                                        <div class="text-center mt-1" style="font-size: 0.7rem; color: #6c757d;">
+                                            <i class="bi bi-shield-check"></i> Payment handled entirely by Gumroad
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                {% if not plan.has_pro_pack and plan.pack_3_gumroad_zip_url and not plan.pack_3_price %}
+                                    <div class="alert alert-secondary mt-3 mb-0" role="status">
+                                        <i class="bi bi-info-circle"></i>
+                                        Pack 3 is not available yet.
+                                    </div>
+                                {% endif %}
+
+                                {% if plan.has_pro_pack %}
+                                <div class="plan-version plan-version--pro plan-version--compact" id="plan-pack-pro">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-primary-subtle text-primary">{{ plan.PACK_DISPLAY_LABELS.pro }}</span>
+                                <span class="text-muted" style="font-size: 0.7rem;">BIM &amp; CAD assets</span>
+                            </div>
+                            <h3>{{ plan.pro_pack_label|default:"Pro Pack" }}</h3>
+                            <p class="text-muted mb-2">{{ plan.pro_pack_summary|default:"Unlock editable BIM and CAD deliverables when you need consultant-ready files." }}</p>
+                            {% if plan.pro_pack_notes %}
+                                <p class="text-muted small mb-3">{{ plan.pro_pack_notes }}</p>
+                            {% endif %}
+
+                            {% if plan.pack_3_gumroad_zip_url %}
+                                <div class="mb-3">
+                                    <a href="{{ plan.pack_3_gumroad_zip_url }}" class="btn btn-primary w-100" rel="noopener">
+                                        <i class="bi bi-lock-fill"></i> Buy Pack 3 ZIP
+                                    </a>
+                                    <div class="text-center mt-1" style="font-size: 0.7rem; color: #6c757d;">
+                                        <strong>All formats. All standards. One powerful download ready for global use.</strong>
+                                    </div>
+                                    <div class="text-center mt-2" style="font-size: 1.5rem; font-weight: 700; color: var(--color-primary);">
+                                        ${{ plan.pack_3_price }}
+                                    </div>
+                                    <div class="text-center text-muted" style="font-size: 0.7rem;">
+                                        One-time payment • instant download
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if has_revit or has_ifc or has_dwg %}
+                            <div class="plan-pro-deliverables">
+                                {% if has_revit %}
+                                <article class="plan-pro-deliverable">
+                                    <div class="plan-pro-deliverable__header">
+                                        <div class="plan-pro-deliverable__icon">
+                                            <i class="bi bi-cube"></i>
+                                        </div>
+                                        <div>
+                                            <strong>Editable Revit file (RVT)</strong>
+                                            <div class="text-muted" style="font-size: var(--text-xs);">Sold securely via Gumroad</div>
+                                        </div>
+                                    </div>
+                                    <p class="text-muted mb-3">{{ plan.revit_notes|default:"Unlock the native Revit model for consultants and coordination. Layers stay organized for fast edits." }}</p>
+                                    {% if plan.pack_3_gumroad_zip_url %}
+                                        <div class="plan-pro-deliverable__meta text-muted">Included in Pack 3 ZIP (Metric + Imperial).</div>
+                                    {% else %}
+                                        <a href="{{ plan.gumroad_revit_url }}" class="btn btn-outline-secondary w-100" rel="noopener">
+                                            <i class="bi bi-cash-coin"></i> Buy editable Revit file
+                                        </a>
+                                    {% endif %}
+                                    {% if plan.revit_version %}
+                                        <div class="plan-pro-deliverable__meta text-muted">Prepared for {{ plan.revit_version }}</div>
+                                    {% endif %}
+                                </article>
+                                {% endif %}
+
+                                {% if has_ifc %}
+                                <article class="plan-pro-deliverable">
+                                    <div class="plan-pro-deliverable__header">
+                                        <div class="plan-pro-deliverable__icon">
+                                            <i class="bi bi-diagram-3"></i>
+                                        </div>
+                                        <div>
+                                            <strong>IFC file for open BIM</strong>
+                                            <div class="text-muted" style="font-size: var(--text-xs);">Neutral Industry Foundation Classes export via Gumroad</div>
+                                        </div>
+                                    </div>
+                                    <p class="text-muted mb-3">{{ plan.ifc_notes|default:"IFC (Industry Foundation Classes) is the open BIM exchange format. Use it to coordinate with consultants or software outside Revit without extra conversions." }}</p>
+                                    {% if plan.pack_3_gumroad_zip_url %}
+                                        <div class="plan-pro-deliverable__meta text-muted">Included in Pack 3 ZIP (Metric + Imperial).</div>
+                                    {% else %}
+                                        <a href="{{ plan.gumroad_ifc_url }}" class="btn btn-outline-dark w-100" rel="noopener">
+                                            <i class="bi bi-box-arrow-up-right"></i> Buy IFC file
+                                        </a>
+                                    {% endif %}
+                                    {% if plan.ifc_version %}
+                                        <div class="plan-pro-deliverable__meta text-muted">Exported as {{ plan.ifc_version }}</div>
+                                    {% endif %}
+                                </article>
+                                {% endif %}
+
+                                {% if has_dwg %}
+                                <article class="plan-pro-deliverable">
+                                    <div class="plan-pro-deliverable__header">
+                                        <div class="plan-pro-deliverable__icon">
+                                            <i class="bi bi-bezier2"></i>
+                                        </div>
+                                        <div>
+                                            <strong>DWG / DXF export</strong>
+                                            <div class="text-muted" style="font-size: var(--text-xs);">Provided directly by the studio</div>
+                                        </div>
+                                    </div>
+                                    <p class="text-muted mb-3">Download the 2D CAD export for consultants who prefer DWG or DXF coordination.</p>
+                                    <div class="plan-pro-deliverable__actions">
+                                        {% if plan.pack_3_gumroad_zip_url %}
+                                            <div class="plan-pro-deliverable__meta text-muted">Included in Pack 3 ZIP (Metric + Imperial).</div>
+                                        {% else %}
+                                            <a href="{{ plan.dwg_download_url }}" class="btn btn-outline-dark w-100" download>
+                                                <i class="bi bi-download"></i> {{ pack_config.dwg_cta_label }}
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                    {% if pack_config.dwg_file_description %}
+                                        <div class="plan-pro-deliverable__meta text-muted">{{ pack_config.dwg_file_description }}</div>
+                                    {% endif %}
+                                </article>
+                                {% endif %}
+                            </div>
+                            {% else %}
+                                <div class="alert alert-warning mb-0" role="status">
+                                    <i class="bi bi-info-circle"></i>
+                                    Pack 3 is enabled, but no deliverables are linked yet. Add Revit, IFC, or DWG assets to show them here.
+                                </div>
+                            {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+{% endwith %}
+{% endwith %}
+
+                <!-- Architect’s Notes -->
+                <div class="dossier-section mb-4">
+                    <div class="dossier-section__header d-flex justify-content-between align-items-center">
+                        <h2 class="dossier-section__title">Architect’s Design Notes</h2>
+                        <button class="btn btn-link d-lg-none p-0" type="button" data-bs-toggle="collapse" data-bs-target="#architectNotes" aria-expanded="false" aria-controls="architectNotes">
+                            Show/Hide
+                        </button>
+                    </div>
+                    <div class="dossier-section__body" style="background: var(--color-gray-50); border-radius: var(--radius-lg); padding: var(--space-4);">
+                        <div id="architectNotes" class="collapse d-lg-block">
+                            {% if plan.architect_design_notes %}
+                                <p style="white-space: pre-line;">{{ plan.architect_design_notes }}</p>
+                            {% else %}
+                                <p style="white-space: pre-line;">{{ plan.description }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Context & Suitability -->
+                <div class="dossier-section mb-4">
+                    <div class="dossier-section__header">
+                        <h2 class="dossier-section__title">Context & Suitability</h2>
+                        <p class="text-muted mb-0" style="font-size: var(--text-sm);">Reading of climate, plot and user intent.</p>
+                    </div>
+                    <div class="dossier-section__body">
+                        <div class="plan-dossier-specs">
+                            <div class="plan-dossier-spec"><span>Climate suitability</span><strong>{{ plan.climate_suitability|default:"Not specified" }}</strong></div>
+                            <div class="plan-dossier-spec"><span>Plot type</span><strong>{{ plan.plot_type|default:"Not specified" }}</strong></div>
+                            <div class="plan-dossier-spec"><span>Budget level</span><strong>{{ plan.get_budget_level_display|default:"Not specified" }}</strong></div>
+                            <div class="plan-dossier-spec"><span>Target user</span><strong>{{ plan.target_user|default:"Not specified" }}</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calm CTA -->
+                <div class="dossier-section mb-4" style="background: linear-gradient(135deg, #F5F7FA 0%, #E9EEF7 100%); border-radius: var(--radius-xl);">
+                    <div class="dossier-section__body">
+                        <p class="text-uppercase text-muted" style="letter-spacing: 0.08em; font-size: var(--text-xs);">Ready when you are</p>
+                        <h2 class="h4">Move to the dimensioned set</h2>
+                        <p class="text-muted" style="max-width: 45ch;">Gain the full, annotated drawing pack prepared for construction coordination. Download begins immediately after the secure payment clears.</p>
+                        <div class="d-flex flex-column flex-md-row flex-wrap gap-2">
+                            {% if plan.has_paid_pdf_offer %}
+                                <a href="{{ plan.gumroad_paid_pdf_url }}" class="btn btn-primary flex-fill" rel="noopener">
+                                    <i class="bi bi-lock-fill"></i> Buy dimensioned PDF
+                                </a>
+                            {% endif %}
+                            {% if plan.has_revit_offer %}
+                                <a href="{{ plan.gumroad_revit_url }}" class="btn btn-outline-secondary flex-fill" rel="noopener">
+                                    <i class="bi bi-cube"></i> Buy editable Revit file
+                                </a>
+                            {% endif %}
+                            {% if plan.has_ifc_offer %}
+                                <a href="{{ plan.gumroad_ifc_url }}" class="btn btn-outline-dark flex-fill" rel="noopener">
+                                    <i class="bi bi-diagram-3"></i> Buy IFC file
+                                </a>
+                            {% endif %}
+                            <a href="{% url 'core:contact' %}" class="btn btn-outline-secondary flex-fill">
+                                <i class="bi bi-pen"></i> Talk with the architect
+                            </a>
+                        </div>
+                        <p class="small text-muted mt-3 mb-0"><i class="bi bi-shield-check"></i> Secure payment, confirmation email within minutes.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <!-- Micro-trust & Contact -->
+                <div class="dossier-section mb-4">
+                    <div class="dossier-section__header">
+                        <h2 class="dossier-section__title">Confidence markers</h2>
+                    </div>
+                    <div class="dossier-section__body">
+                        <ul class="list-unstyled mb-0" style="font-size: var(--text-sm);">
+                            <li class="d-flex align-items-start mb-3">
+                                <i class="bi bi-check2-circle text-success me-2"></i>
+                                <div>
+                                    <strong>Human-designed layouts</strong>
+                                    <div class="text-muted">Drafted by the studio team, reviewed for circulation logic.</div>
+                                </div>
+                            </li>
+                            <li class="d-flex align-items-start mb-3">
+                                <i class="bi bi-shield-check text-primary me-2"></i>
+                                <div>
+                                    <strong>Optimized for real builds</strong>
+                                    <div class="text-muted">Dimensioned set aligns with practical construction sequencing.</div>
+                                </div>
+                            </li>
+                            <li class="d-flex align-items-start">
+                                <i class="bi bi-people text-secondary me-2"></i>
+                                <div>
+                                    <strong>Direct architect access</strong>
+                                    <div class="text-muted">Ask adaptation questions before or after purchasing.</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="dossier-section">
+                    <div class="dossier-section__body">
+                        <p class="fw-semibold mb-1">Need adjustments?</p>
+                        <p class="text-muted" style="font-size: var(--text-sm);">We can guide on minor edits, structural questions, or regional adaptations.</p>
+                        <a href="{% url 'core:contact' %}" class="btn btn-outline-primary w-100">Contact the studio</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Professional image zoom modal (lightbox) -->
+<div class="modal fade" id="planImageModal" tabindex="-1" aria-labelledby="planImageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content" style="background: #FAFBFC; border: none;">
+      <div class="modal-header" style="border-bottom: 1px solid var(--color-gray-200);">
+        <h5 class="modal-title" id="planImageModalLabel">
+          <i class="bi bi-zoom-in"></i> Plan Image Viewer
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="background: #FAFBFC; padding: var(--space-6);">
+        <div style="text-align: center;">
+          <img id="planModalImg" class="modal-img" alt="Plan image" src="" style="max-width: 100%; height: auto;">
+        </div>
+        <div class="text-center mt-3">
+          <small class="text-muted">
+            <i class="bi bi-info-circle"></i> 
+            <span class="d-none d-md-inline">Click and drag to pan, scroll to zoom</span>
+            <span class="d-md-none">Pinch to zoom, drag to pan</span>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Related Plans -->
+{% if related_plans %}
+<section class="py-4" style="background: var(--color-gray-50); border-top: 1px solid var(--color-gray-200);">
+    <div class="container">
+        <h2 class="h5 mb-3">Similar Plans in {{ plan.category.name }}</h2>
+        <div class="row g-4">
+            {% for related in related_plans %}
+            <div class="col-md-6 col-lg-3">
+                {% include 'plans/_plan_card.html' with plan=related show_ctas=False %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

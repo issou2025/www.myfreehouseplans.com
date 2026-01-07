@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Download Denied{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 text-center">
+            <div class="mb-4">
+                <i class="bi bi-x-circle-fill text-danger" style="font-size: 5rem;"></i>
+            </div>
+
+            <h1 class="mb-3">Access Denied</h1>
+            <p class="lead mb-4">{{ reason }}</p>
+
+            <div class="card mb-4 text-start">
+                <div class="card-body">
+                    <h6 class="card-title">Order Information</h6>
+                    <p class="mb-1"><strong>Order:</strong> {{ order.order_number }}</p>
+                    <p class="mb-1"><strong>Plan:</strong> {{ order.plan.title }}</p>
+                    <p class="mb-1"><strong>Status:</strong> {{ order.get_payment_status_display }}</p>
+                    {% if order.payment_status == 'completed' %}
+                    <p class="mb-1"><strong>Downloads:</strong> {{ order.download_count }} / {{ order.max_downloads }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="alert alert-info text-start">
+                <p class="mb-2"><strong>Need Help?</strong></p>
+                <p class="mb-0">
+                    If you believe this is an error, please contact support with your order number: 
+                    <strong>{{ order.order_number }}</strong>
+                </p>
+            </div>
+
+            <div class="mt-4">
+                <a href="{% url 'orders:my_orders' %}" class="btn btn-primary me-2">View My Orders</a>
+                <a href="{% url 'core:contact' %}" class="btn btn-outline-secondary">Contact Support</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

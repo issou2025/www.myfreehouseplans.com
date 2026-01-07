@@ -1,0 +1,435 @@
+/**
+ * MODERN THEME OVERRIDES
+ * Role: Senior Visual Designer Implementation
+ * Date: January 6, 2026
+ * Goal: Transform layout, typography, and colors without HTML changes.
+ */
+
+/* -------------------------------------------------------------------------- */
+/*                                 VARIABLES                                  */
+/* -------------------------------------------------------------------------- */
+:root {
+  /* --- PALETTE: Confident, Natural, Premium --- */
+  /* Primary: Deep, trustworthy blue. Vivid but not neon. */
+  --premium-primary: #0F62FE; 
+  --premium-primary-hover: #0043CE;
+  --premium-primary-soft: #E5F0FF;
+  
+  /* Accent: Fresh, supportive emerald/teal. */
+  --premium-accent: #059669;
+  --premium-accent-hover: #047857;
+  --premium-accent-soft: #ECFDF5;
+
+  /* Neutrals: Calm, high-contrast text, soft backgrounds. */
+  --premium-bg-body: #F8FAFC;    /* Slate 50 - warmer than pure white */
+  --premium-bg-surface: #FFFFFF;
+  --premium-text-primary: #0F172A; /* Slate 900 */
+  --premium-text-secondary: #475569; /* Slate 600 */
+  --premium-text-muted: #94A3B8;   /* Slate 400 */
+  --premium-border: #E2E8F0;       /* Slate 200 */
+
+  /* --- TYPOGRAPHY --- */
+  --premium-font-heading: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --premium-font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  
+  /* --- SHAPES & SHADOWS --- */
+  --premium-radius-sm: 8px;
+  --premium-radius-md: 12px;
+  --premium-radius-lg: 16px;
+  --premium-radius-xl: 24px;
+  --premium-radius-pill: 9999px;
+
+  --premium-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --premium-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.08);
+  --premium-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+  --premium-shadow-hover: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+/* -------------------------------------------------------------------------- */
+/*                               GLOBAL RESET                                 */
+/* -------------------------------------------------------------------------- */
+body {
+  font-family: var(--premium-font-body) !important;
+  background-color: var(--premium-bg-body) !important;
+  color: var(--premium-text-primary) !important;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: var(--premium-font-heading) !important;
+  font-weight: 700;
+  color: var(--premium-text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+h1 { margin-bottom: 1.5rem; }
+h2 { margin-bottom: 1.25rem; margin-top: 2rem; }
+p { margin-bottom: 1.25rem; }
+
+a {
+  color: var(--premium-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+a:hover { color: var(--premium-primary-hover); }
+
+/* Remove harsh outlines, replace with focus rings */
+*:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--premium-primary-soft), 0 0 0 1px var(--premium-primary);
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                COMPONENTS                                  */
+/* -------------------------------------------------------------------------- */
+
+/* --- NAVBAR --- */
+.navbar {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+  box-shadow: var(--premium-shadow-sm);
+}
+
+.navbar-brand {
+  font-family: var(--premium-font-heading);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--premium-primary) !important;
+  font-size: 1.5rem;
+}
+
+.nav-link {
+  font-weight: 500;
+  color: var(--premium-text-secondary) !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: var(--premium-radius-sm);
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  background-color: var(--premium-bg-body);
+  color: var(--premium-primary) !important;
+}
+
+.nav-link.active {
+  background-color: var(--premium-primary-soft);
+  color: var(--premium-primary) !important;
+  font-weight: 600;
+}
+
+/* --- BUTTONS --- */
+.btn {
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--premium-radius-pill) !important; /* Full pill shape for modern feel */
+  border: none;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 0.01em;
+  box-shadow: none !important; /* Reset default bootstrap shadows to apply custom */
+  text-transform: none !important;
+}
+
+.btn-primary {
+  background-color: var(--premium-primary) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 6px rgba(15, 98, 254, 0.25) !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--premium-primary-hover) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 12px rgba(15, 98, 254, 0.3) !important;
+}
+
+.btn-secondary, .btn-outline-secondary {
+  background-color: var(--premium-bg-surface) !important;
+  color: var(--premium-text-primary) !important;
+  border: 1px solid var(--premium-border) !important;
+}
+
+.btn-secondary:hover, .btn-outline-secondary:hover {
+  background-color: var(--premium-bg-body) !important;
+  border-color: var(--premium-text-muted) !important;
+  transform: translateY(-1px);
+}
+
+.btn-lg {
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+}
+
+/* --- CARDS & PLANS --- */
+.card {
+  border: none !important;
+  background-color: var(--premium-bg-surface) !important;
+  border-radius: var(--premium-radius-lg) !important;
+  box-shadow: var(--premium-shadow-md);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden; /* For image zooming */
+}
+
+/* Hover effect only for interactive cards (e.g., plans) */
+.col-md-4 .card:hover, .plan-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--premium-shadow-hover);
+}
+
+.card-body {
+  padding: 1.5rem !important; /* More breathing room */
+}
+
+.card-title {
+  margin-bottom: 0.75rem;
+  color: var(--premium-text-primary);
+}
+
+.card-text {
+  color: var(--premium-text-secondary);
+}
+
+/* Card images */
+.card-img-top {
+  border-top-left-radius: var(--premium-radius-lg);
+  border-top-right-radius: var(--premium-radius-lg);
+  object-fit: cover;
+}
+
+/* --- HERO SECTION (Generic target based on typical layouts) --- */
+.hero, .jumbotron, header.bg-light, header.py-5 {
+  background: linear-gradient(135deg, #EFF6FF 0%, #FFFFFF 100%) !important;
+  position: relative;
+  overflow: hidden;
+  padding-top: 6rem !important;
+  padding-bottom: 6rem !important;
+}
+
+/* Make Hero text clear */
+.hero h1, .display-1, .display-4 {
+  font-weight: 800;
+  color: var(--premium-text-primary);
+  margin-bottom: 1.5rem;
+}
+
+.hero p.lead {
+  color: var(--premium-text-secondary);
+  font-size: 1.25rem;
+  max-width: 600px;
+  margin: 0 auto 2rem auto;
+}
+
+/* --- FORMS --- */
+.form-control, .form-select {
+  background-color: var(--premium-bg-surface);
+  border: 1px solid var(--premium-border);
+  border-radius: var(--premium-radius-md);
+  padding: 0.875rem 1rem; /* Taller inputs */
+  font-size: 1rem;
+  color: var(--premium-text-primary);
+  box-shadow: var(--premium-shadow-sm);
+  transition: all 0.2s;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--premium-primary);
+  box-shadow: 0 0 0 3px var(--premium-primary-soft);
+}
+
+/* --- FOOTER --- */
+footer, .bg-dark {
+  background-color: var(--premium-text-primary) !important; /* Deep dark blue/slate */
+  color: #94A3B8 !important; /* Slate 400 */
+}
+
+footer h5 {
+  color: #fff !important;
+  margin-bottom: 1.5rem;
+}
+
+footer a {
+  color: #CBD5E1 !important; /* Slate 300 */
+  text-decoration: none;
+}
+footer a:hover {
+  color: #fff !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                               HOMEPAGE ONLY                                */
+/* -------------------------------------------------------------------------- */
+
+.homepage .premium-hero {
+  background: linear-gradient(135deg, var(--premium-bg-body) 0%, var(--premium-bg-surface) 100%) !important;
+}
+
+.homepage-trust-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--premium-border);
+  border-radius: var(--premium-radius-lg);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(10px);
+}
+
+.homepage-trust-strip__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--premium-text-secondary);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.homepage-trust-strip__item i {
+  color: var(--premium-primary);
+}
+
+.homepage-trust-strip__divider {
+  width: 1px;
+  height: 18px;
+  background: var(--premium-border);
+}
+
+@media (max-width: 767px) {
+  .homepage-trust-strip__divider {
+    display: none;
+  }
+}
+
+.homepage-hero-card {
+  border: 1px solid var(--premium-border) !important;
+}
+
+.homepage-testimonial-card {
+  border: 1px solid var(--premium-border) !important;
+  background: linear-gradient(135deg, var(--premium-bg-surface) 0%, var(--premium-bg-body) 100%) !important;
+}
+
+.feature-icon--accent {
+  background: linear-gradient(135deg, var(--premium-accent), var(--premium-accent-soft));
+}
+
+.feature-icon--primary {
+  background: linear-gradient(135deg, var(--premium-primary), var(--premium-primary-soft));
+}
+
+.homepage-pack-card {
+  border: 1px solid var(--premium-border);
+}
+
+.homepage-pack-card--featured {
+  box-shadow: var(--premium-shadow-lg);
+  border-color: rgba(15, 98, 254, 0.35);
+}
+
+.homepage-pack-card__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--premium-radius-pill);
+  border: 1px solid var(--premium-border);
+  background: var(--premium-bg-body);
+  color: var(--premium-text-secondary);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.75rem;
+}
+
+.homepage-pack-card__features {
+  list-style: none;
+  padding: 0;
+  margin: 1.25rem 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.homepage-pack-card__features li {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  color: var(--premium-text-secondary);
+}
+
+.homepage-pack-card__features i {
+  color: var(--premium-accent);
+  margin-top: 0.2rem;
+}
+
+.homepage-pack-card__price {
+  padding: 1rem;
+  border-radius: var(--premium-radius-md);
+  border: 1px solid var(--premium-border);
+  background: var(--premium-bg-body);
+  margin-bottom: 1rem;
+}
+
+.homepage-pack-card__price-main {
+  font-family: var(--premium-font-heading);
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: var(--premium-text-primary);
+}
+
+.homepage-pack-card__price-sub {
+  color: var(--premium-text-muted);
+  font-size: 0.95rem;
+}
+
+/* Make plan previews feel uniform on the homepage */
+.homepage .plan-dossier-title a {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.homepage .plan-dossier-excerpt {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+/* --- UTILITIES & PATCHES --- */
+
+/* Fix Badge Colors */
+.badge {
+  padding: 0.5em 0.8em;
+  border-radius: 6px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.bg-primary { background-color: var(--premium-primary) !important; }
+.bg-secondary { background-color: #E2E8F0 !important; color: var(--premium-text-primary) !important; }
+.bg-success { background-color: var(--premium-accent) !important; }
+
+/* Image refinement */
+img.img-fluid, .card-img-top {
+  border-radius: var(--premium-radius-md);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  body {
+    font-size: 15px; /* Slightly easier reading on small */
+  }
+  h1 { font-size: 2rem !important; }
+  .navbar-collapse {
+    background: #fff;
+    padding: 1rem;
+    border-radius: var(--premium-radius-lg);
+    box-shadow: var(--premium-shadow-lg);
+    margin-top: 0.5rem;
+    border: 1px solid var(--premium-border);
+  }
+}

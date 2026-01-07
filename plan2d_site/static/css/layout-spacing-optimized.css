@@ -1,0 +1,464 @@
+/* ========================================
+   LAYOUT SPACING OPTIMIZATION
+   Reduces vertical gaps, improves scanning
+   ======================================== */
+
+/* Mobile-first: aggressive spacing reduction */
+@media (max-width: 767px) {
+  /* Reduce excessive section gaps */
+  .dossier-section {
+    margin-bottom: 16px !important;
+  }
+
+  .dossier-section__header {
+    margin-bottom: 8px;
+  }
+
+  .dossier-section__header h2 {
+    margin-bottom: 2px;
+  }
+
+  .dossier-section__body {
+    padding-top: 4px;
+  }
+
+  /* Compact pack sections */
+  .py-4 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  .py-5 {
+    padding-top: 1.25rem !important;
+    padding-bottom: 1.25rem !important;
+  }
+
+  /* Tighter margins for related content */
+  .mb-4 {
+    margin-bottom: 0.75rem !important;
+  }
+
+  .mb-3 {
+    margin-bottom: 0.5rem !important;
+  }
+
+  /* Compact plan at a glance card */
+  .plan-at-glance-card {
+    padding: 12px !important;
+  }
+
+  .plan-at-glance-grid {
+    gap: 8px !important;
+    margin-top: 8px;
+  }
+
+  .plan-at-glance-grid > div {
+    padding: 6px 0;
+  }
+
+  /* Compact BIM items grouping */
+  .plan-version__cta {
+    margin-bottom: 12px !important;
+    padding: 12px !important;
+  }
+
+  .plan-version__cta .d-flex.gap-2 {
+    margin-bottom: 6px !important;
+  }
+
+  .plan-version__cta p {
+    margin-bottom: 8px !important;
+    line-height: 1.4;
+  }
+
+  /* General tightening */
+  .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .row {
+    --bs-gutter-x: 1rem; /* Tighter gutters */
+  }
+
+  .card {
+    margin-bottom: 12px;
+  }
+
+  .btn {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    margin-bottom: 0.75rem;
+  }
+}
+
+/* Tablet and up: moderate spacing */
+@media (min-width: 768px) {
+  .dossier-section {
+    margin-bottom: 18px !important;
+  }
+
+  .dossier-section__header {
+    margin-bottom: 10px;
+  }
+
+  .py-4 {
+    padding-top: 1.25rem !important;
+    padding-bottom: 1.25rem !important;
+  }
+
+  .py-5 {
+    padding-top: 1.75rem !important;
+    padding-bottom: 1.75rem !important;
+  }
+
+  .mb-4 {
+    margin-bottom: 1rem !important;
+  }
+
+  .mb-3 {
+    margin-bottom: 0.75rem !important;
+  }
+
+  .plan-at-glance-card {
+    padding: 14px !important;
+  }
+
+  .plan-at-glance-grid {
+    gap: 10px !important;
+    margin-top: 10px;
+  }
+
+  .plan-version__cta {
+    margin-bottom: 14px !important;
+    padding: 14px !important;
+  }
+
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .row {
+    --bs-gutter-x: 1.5rem;
+  }
+
+  .card {
+    margin-bottom: 16px;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Desktop: balanced spacing */
+@media (min-width: 992px) {
+  .dossier-section {
+    margin-bottom: 20px !important;
+  }
+
+  .dossier-section__header {
+    margin-bottom: 12px;
+  }
+
+  .py-4 {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+
+  .py-5 {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+
+  .mb-4 {
+    margin-bottom: 1rem !important;
+  }
+
+  .mb-3 {
+    margin-bottom: 0.75rem !important;
+  }
+
+  .plan-at-glance-card {
+    padding: 16px !important;
+  }
+
+  .plan-at-glance-grid {
+    gap: 12px !important;
+    margin-top: 12px;
+  }
+
+  .plan-version__cta {
+    margin-bottom: 16px !important;
+    padding: 16px !important;
+  }
+
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .row {
+    --bs-gutter-x: 1.5rem;
+  }
+
+  .card {
+    margin-bottom: 20px;
+  }
+
+  .btn {
+    padding: 12px 24px;
+    font-size: 1rem;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin-bottom: 1.25rem;
+  }
+}
+
+/* Tighter line-height for secondary text */
+.text-muted {
+  line-height: 1.5;
+}
+
+.text-muted.small,
+.small.text-muted {
+  line-height: 1.4;
+}
+
+/* Compact badges */
+.badge {
+  padding: 4px 10px;
+  font-size: 0.7rem;
+}
+
+/* Align pack card spacing with global variables */
+:root {
+  --plan-pack-gap: clamp(1.25rem, 2vw, 1.5rem);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --plan-pack-gap: 1rem;
+  }
+}
+
+/* Compact gallery */
+.plan-gallery-grid {
+  gap: 12px;
+}
+
+/* Reduce breadcrumb padding */
+section.py-3 {
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important;
+}
+
+/* Compact plan header */
+.plan-preview {
+  margin-bottom: 20px !important;
+}
+
+/* Tighter button groups */
+.btn-group {
+  gap: 0;
+}
+
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 0.875rem;
+}
+
+/* Alert spacing */
+.alert {
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+/* Compact icon + text groups */
+.d-flex.align-items-center.gap-2 {
+  gap: 8px !important;
+}
+
+.d-flex.align-items-center.gap-3 {
+  gap: 12px !important;
+}
+
+/* Reduce empty space in plan spec pills */
+.plan-dossier-spec,
+.premium-plan-spec {
+  padding: 10px 14px !important;
+}
+
+.plan-dossier-spec-label,
+.premium-plan-spec-label {
+  margin-bottom: 2px !important;
+}
+
+.plan-dossier-specs,
+.premium-plan-specs {
+  gap: 10px !important;
+  margin: 12px 0 !important;
+}
+
+/* Compact form rows */
+.form-row {
+  margin-bottom: 12px;
+}
+
+/* Reduce modal padding */
+.modal-body {
+  padding: 1.25rem;
+}
+
+/* ========================================
+   MOBILE OPTIMIZATIONS
+   ======================================== */
+
+@media (max-width: 768px) {
+  .py-4 {
+    padding-top: 1.25rem !important;
+    padding-bottom: 1.25rem !important;
+  }
+
+  .py-5 {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+
+  .dossier-section {
+    margin-bottom: 16px !important;
+  }
+
+  .plan-version {
+    padding: 16px 14px !important;
+  }
+
+  .plan-at-glance-card {
+    padding: 14px !important;
+  }
+
+  .plan-at-glance-grid {
+    gap: 10px !important;
+  }
+
+  .plan-version__cta {
+    padding: 14px !important;
+  }
+
+  #plan-pack-pro {
+    padding: 16px 14px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn-sm {
+    padding: 8px 12px;
+    font-size: 0.8125rem;
+  }
+
+  .plan-at-glance-grid strong {
+    font-size: 0.95rem;
+  }
+
+  .plan-version h3 {
+    font-size: 1.125rem !important;
+  }
+}
+
+/* ========================================
+   VISUAL HIERARCHY IMPROVEMENTS
+   ======================================== */
+
+/* Primary CTAs stand out */
+.plan-version__cta .btn-primary,
+.plan-version__cta .btn-outline-success {
+  font-weight: 600;
+  padding: 11px 20px;
+}
+
+/* Secondary text less prominent */
+.plan-version__cta .text-muted {
+  font-size: 0.8125rem;
+  opacity: 0.85;
+}
+
+/* Make numbers prominent in stats */
+.plan-at-glance-grid strong {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* Compact collapsible sections */
+.collapse {
+  margin-top: 0;
+}
+
+/* Reduce title spacing */
+h1, h2, h3, h4, h5 {
+  line-height: 1.3;
+}
+
+.h5 {
+  margin-bottom: 0 !important;
+}
+
+/* Optimize for 5-second scan */
+.plan-at-glance-card .small {
+  font-size: 0.7rem;
+  opacity: 0.8;
+}

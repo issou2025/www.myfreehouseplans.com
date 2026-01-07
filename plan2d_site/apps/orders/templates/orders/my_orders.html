@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}My Orders{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="mb-4">My Orders</h1>
+
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Email Lookup Form -->
+            {% if not email %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Find Your Orders</h5>
+                    <p class="text-muted">Enter the email address you used when purchasing plans.</p>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" name="email" 
+                                   placeholder="your@email.com" required>
+                            <button class="btn btn-primary" type="submit">
+                                <i class="bi bi-search"></i> Find Orders
+                            </button>
+                        </div>
+                    </form>
+
+                    <small class="text-muted">
+                        <i class="bi bi-shield-check"></i>
+                        No account needed. We'll show orders associated with this email.
+                    </small>
+                </div>
+            </div>
+
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i>
+                <strong>Need help finding your order?</strong><br>
+                If you can't remember which email you used, please <a href="{% url 'core:contact' %}">contact support</a> 
+                with any order details you have.
+            </div>
+            {% endif %}
+
+            <!-- Orders List -->
+            {% if email %}
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="mb-0">Orders for {{ email }}</h5>
+                <form method="get">
+                    <button type="submit" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Search Again
+                    </button>
+                </form>
+            </div>
+
+            {% if orders %}
+                {% for order in orders %}
+                <div class="card mb-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ order.order_number }}</strong>
+                            <span class="text-muted ms-2">{{ order.created_at|date:"M d, Y" }}</span>
+                        </div>
+                        <div>
+                            {% if order.payment_status == 'completed' %}
+                                <span class="badge bg-success">{{ order.get_payment_status_display }}</span>
+                            {% elif order.payment_status == 'pending' %}
+                                <span class="badge bg-warning">{{ order.get_payment_status_display }}</span>
+                            {% elif order.payment_status == 'failed' %}
+                                <span class="badge bg-danger">{{ order.get_payment_status_display }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ order.get_payment_status_display }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h6 class="mb-2">{{ order.plan.title }}</h6>
+                                <p class="text-muted mb-2">
+                                    {{ order.plan.reference }} • 
+                                    {{ order.plan.bedrooms }} bed • 
+                                    {{ order.plan.bathrooms }} bath
+                                </p>
+                                <p class="mb-0"><strong>Price:</strong> ${{ order.price_paid }}</p>
+                            </div>
+                            <div class="col-md-4 text-md-end">
+                                {% if order.payment_status == 'completed' %}
+                                    <a href="{% url 'secure_download' access_token=order.access_token %}" 
+                                       class="btn btn-success btn-sm mb-2 w-100">
+                                        <i class="bi bi-download"></i> Download
+                                    </a>
+                                    <small class="text-muted d-block">
+                                        {{ order.downloads_remaining }} of {{ order.max_downloads }} downloads left
+                                    </small>
+                                {% elif order.payment_status == 'pending' %}
+                                    <a href="{% url 'orders:order_confirmation' order_number=order.order_number %}" 
+                                       class="btn btn-warning btn-sm mb-2 w-100">
+                                        <i class="bi bi-clock"></i> View Payment Info
+                                    </a>
+                                {% else %}
+                                    <button class="btn btn-secondary btn-sm mb-2 w-100" disabled>
+                                        {{ order.get_payment_status_display }}
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    No orders found for this email address.
+                </div>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

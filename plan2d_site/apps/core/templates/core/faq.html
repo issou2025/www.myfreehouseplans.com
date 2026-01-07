@@ -1,0 +1,251 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQ - Frequently Asked Questions - {{ brand_domain }}{% endblock %}
+
+{% block meta_description %}Find answers to common questions about our house plans, pricing, file formats, and more.{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<section class="py-3" style="background: var(--color-gray-50); border-bottom: 1px solid var(--color-gray-200);">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'core:home' %}"><i class="bi bi-house-door"></i> Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">FAQ</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- Page Header -->
+<section class="bg-light py-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="display-4 fw-bold mb-3">Frequently Asked Questions</h1>
+                <p class="lead text-muted">Everything you need to know about our plans</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick navigation helpers -->
+<section class="py-3" style="background: #ffffff; border-bottom: 1px solid var(--color-gray-200);">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div class="text-muted" style="font-size: var(--text-sm);">
+                <i class="bi bi-info-square"></i> Still unsure? Continue exploring or contact us.
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'plans:list' %}" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-grid-3x2"></i> Browse Plans
+                </a>
+                <a href="{% url 'core:contact' %}" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-chat-dots"></i> Contact Support
+                </a>
+                <a href="{% url 'core:home' %}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-house"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Content -->
+<section class="py-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingPayment">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapsePayment" aria-expanded="false" aria-controls="faqCollapsePayment">
+                                Payment Instructions
+                            </button>
+                        </h2>
+                        <div id="faqCollapsePayment" class="accordion-collapse collapse" aria-labelledby="faqHeadingPayment" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body" id="payment-instructions">
+                                <p class="mb-2">Payments are verified manually by our team to keep the process secure and human-reviewed.</p>
+                                <ul class="mb-3">
+                                    <li>Choose a plan from the Plans page</li>
+                                    <li>Follow the Payoneer or Bank Transfer instructions at checkout</li>
+                                    <li>Upload your receipt/screenshot</li>
+                                    <li>Receive your download link by email after verification</li>
+                                </ul>
+                                <a href="{% url 'plans:list' %}" class="btn btn-primary btn-sm">Browse Plans</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeading1">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse1" aria-expanded="false" aria-controls="faqCollapse1">
+                                What is {{ brand_name }}?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse1" class="accordion-collapse collapse" aria-labelledby="faqHeading1" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                {{ brand_domain }} provides human-designed house plans. Download free preview plans (without dimensions), then upgrade to fully dimensioned, build-ready plans when you are ready to build.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeading2">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse2" aria-expanded="false" aria-controls="faqCollapse2">
+                                Are your plans created by AI?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse2" class="accordion-collapse collapse" aria-labelledby="faqHeading2" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                No. Every plan is designed by human professionals with construction and architectural expertise. We believe quality plans require judgment and attention to detail that AI cannot replicate.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeading3">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse3" aria-expanded="false" aria-controls="faqCollapse3">
+                                What software do you use?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse3" class="accordion-collapse collapse" aria-labelledby="faqHeading3" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                All our plans are created using Autodesk Revit, the industry-standard software for architectural design and building information modeling (BIM). This ensures professional-grade accuracy and compatibility.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeading4">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse4" aria-expanded="false" aria-controls="faqCollapse4">
+                                What's the difference between free and premium plans?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse4" class="accordion-collapse collapse" aria-labelledby="faqHeading4" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <ul class="mb-0">
+                                    <li><strong>Free plans:</strong> Preview versions showing the layout and room arrangement without dimensions.</li>
+                                    <li><strong>Premium plans:</strong> Complete plans with all dimensions, measurements, and specifications needed for construction.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeading5">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse5" aria-expanded="false" aria-controls="faqCollapse5">
+                                How much do premium plans cost?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse5" class="accordion-collapse collapse" aria-labelledby="faqHeading5" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Pricing varies by plan complexity and size. Each plan's pricing is displayed on its detail page. There are no hidden fees or subscriptions—just one-time purchases.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeading6">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse6" aria-expanded="false" aria-controls="faqCollapse6">
+                                Can I modify the plans after purchase?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse6" class="accordion-collapse collapse" aria-labelledby="faqHeading6" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes. Once you purchase a plan, you can modify it to suit your needs. We recommend working with a local architect or engineer to ensure modifications comply with local building codes.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeading7">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse7" aria-expanded="false" aria-controls="faqCollapse7">
+                                What file formats do you provide?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse7" class="accordion-collapse collapse" aria-labelledby="faqHeading7" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Premium plans are typically provided in PDF format for easy printing and viewing. Some plans may also include CAD files (DWG/DXF) depending on the specific plan.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeading8">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse8" aria-expanded="false" aria-controls="faqCollapse8">
+                                Are the plans suitable for building permits?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse8" class="accordion-collapse collapse" aria-labelledby="faqHeading8" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Our plans are construction-ready, but permit requirements vary by location. We recommend having a local architect or engineer review and stamp the plans to ensure compliance.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeading9">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse9" aria-expanded="false" aria-controls="faqCollapse9">
+                                Do you provide 3D models or renderings?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse9" class="accordion-collapse collapse" aria-labelledby="faqHeading9" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Currently, we focus on professional 2D floor plans. Since our plans are created in Revit, they can be converted to 3D models by professionals if needed.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeading10">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse10" aria-expanded="false" aria-controls="faqCollapse10">
+                                How do I receive my plan after purchase?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse10" class="accordion-collapse collapse" aria-labelledby="faqHeading10" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                After completing your purchase, you receive a download link via email. You can also access your purchased plans from your orders page.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeading11">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse11" aria-expanded="false" aria-controls="faqCollapse11">
+                                What if I need help understanding the plans?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse11" class="accordion-collapse collapse" aria-labelledby="faqHeading11" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                We're here to help. Contact us through our <a href="{% url 'core:contact' %}">contact page</a> with questions about a plan.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeading12">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse12" aria-expanded="false" aria-controls="faqCollapse12">
+                                Do you offer refunds?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse12" class="accordion-collapse collapse" aria-labelledby="faqHeading12" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Due to the digital nature of our products, all sales are final. We recommend reviewing the free preview version before purchasing.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-light p-3 rounded text-center mt-4">
+                    <h4 class="fw-bold mb-2">Still Have Questions?</h4>
+                    <p class="mb-3">Can't find the answer you're looking for?</p>
+                    <a href="{% url 'core:contact' %}" class="btn btn-primary">Contact Us</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

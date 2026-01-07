@@ -1,0 +1,110 @@
+{% extends "admin/change_list.html" %}
+
+{% block content %}
+  <div class="module" style="margin-bottom: 16px;">
+    <h2 style="margin-bottom: 8px;">Visitor Analytics (Privacy-Respecting)</h2>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+      <div class="module" style="padding: 12px; min-width: 220px;">
+        <h3 style="margin: 0 0 6px 0;">Total Visits</h3>
+        <div style="font-size: 22px; font-weight: 700;">{{ analytics_total_visits|default:0 }}</div>
+        <div style="color: #666;">(page views)</div>
+      </div>
+
+      <div class="module" style="padding: 12px; min-width: 260px;">
+        <h3 style="margin: 0 0 6px 0;">Device Split</h3>
+        <div>Mobile: <strong>{{ analytics_mobile_visits|default:0 }}</strong> ({{ analytics_mobile_pct|default:0 }}%)</div>
+        <div>Desktop: <strong>{{ analytics_desktop_visits|default:0 }}</strong> ({{ analytics_desktop_pct|default:0 }}%)</div>
+      </div>
+
+      <div class="module" style="padding: 12px; min-width: 260px;">
+        <h3 style="margin: 0 0 6px 0;">Top Countries (Top 5)</h3>
+        {% if analytics_top_countries %}
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr>
+                <th style="text-align:left; padding: 6px 4px;">Country</th>
+                <th style="text-align:right; padding: 6px 4px;">Visits</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in analytics_top_countries %}
+                <tr>
+                  <td style="padding: 6px 4px;">{{ row.country_code }}</td>
+                  <td style="padding: 6px 4px; text-align:right;">{{ row.visits }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <div style="color: #666;">No visits yet.</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+      <div class="module" style="padding: 12px; min-width: 360px; flex: 1;">
+        <h3 style="margin: 0 0 8px 0;">Visitors per Country</h3>
+        {% if analytics_countries %}
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr>
+                <th style="text-align:left; padding: 6px 4px;">Country</th>
+                <th style="text-align:right; padding: 6px 4px;">Visits</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in analytics_countries %}
+                <tr>
+                  <td style="padding: 6px 4px;">{{ row.country_code }}</td>
+                  <td style="padding: 6px 4px; text-align:right;">{{ row.visits }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <div style="color: #666;">No visits yet.</div>
+        {% endif %}
+      </div>
+
+      <div class="module" style="padding: 12px; min-width: 360px; flex: 1;">
+        <h3 style="margin: 0 0 8px 0;">Most Visited Pages (by Top Countries)</h3>
+        {% if analytics_top_pages_by_country %}
+          {% for block in analytics_top_pages_by_country %}
+            <div style="margin-bottom: 10px;">
+              <div style="font-weight: 700; margin-bottom: 6px;">{{ block.country_code }}</div>
+              {% if block.pages %}
+                <table style="width: 100%; border-collapse: collapse;">
+                  <thead>
+                    <tr>
+                      <th style="text-align:left; padding: 6px 4px;">URL</th>
+                      <th style="text-align:right; padding: 6px 4px;">Visits</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for row in block.pages %}
+                      <tr>
+                        <td style="padding: 6px 4px;">{{ row.url }}</td>
+                        <td style="padding: 6px 4px; text-align:right;">{{ row.visits }}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              {% else %}
+                <div style="color:#666;">No data.</div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        {% else %}
+          <div style="color: #666;">No visits yet.</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div style="color: #666; margin-top: 10px;">
+      Privacy note: this analytics stores only country code + device type + URL + timestamp. No IP addresses or personal identifiers are stored.
+    </div>
+  </div>
+
+  {{ block.super }}
+{% endblock %}

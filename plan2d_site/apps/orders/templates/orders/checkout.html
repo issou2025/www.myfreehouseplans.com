@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout - {{ plan.title }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'plans:list' %}">Plans</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'plans:detail' slug=plan.slug %}">{{ plan.title }}</a></li>
+                    <li class="breadcrumb-item active">Checkout</li>
+                </ol>
+            </nav>
+
+            <h1 class="mb-4">Manual Payment Instructions</h1>
+
+            <!-- Plan Summary -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">{{ plan.title }}</h5>
+                    <p class="text-muted mb-3">{{ plan.reference }}</p>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Bedrooms:</strong> {{ plan.bedrooms }}</p>
+                            <p class="mb-1"><strong>Bathrooms:</strong> {{ plan.bathrooms }}</p>
+                            <p class="mb-1"><strong>Total Area:</strong> {{ plan.total_area_sqm }} m²</p>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <h3 class="text-primary mb-0">${{ plan.price }}</h3>
+                            <p class="text-muted">One-time purchase</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Important Notice -->
+            <div class="alert alert-info mb-4">
+                <h6 class="alert-heading"><i class="bi bi-info-circle"></i> How Payment Works</h6>
+                <p class="mb-2">This is a <strong>manual payment system</strong> with human verification:</p>
+                <ol class="mb-0">
+                    <li>Make payment using one of the methods below</li>
+                    <li>Upload your payment receipt/screenshot</li>
+                    <li>Our team verifies your payment (usually within 24 hours)</li>
+                    <li>You receive your download link via email</li>
+                </ol>
+            </div>
+
+            <!-- Payment Methods -->
+            <div class="row mb-4">
+                <!-- Payoneer -->
+                <div class="col-md-6 mb-3">
+                    <div class="card h-100 border-primary">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="bi bi-credit-card"></i> Option 1: Payoneer Transfer</h5>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Send payment to:</strong></p>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <p class="mb-2"><strong>Email:</strong><br>
+                                <code>{{ payment_info.payoneer.email }}</code></p>
+                                <p class="mb-0"><strong>Account Holder:</strong><br>
+                                {{ payment_info.payoneer.holder }}</p>
+                            </div>
+                            
+                            <p class="mb-2"><strong>How to pay via Payoneer:</strong></p>
+                            <ol class="small">
+                                <li>Login to your Payoneer account</li>
+                                <li>Go to "Make a Payment" or "Pay"</li>
+                                <li>Enter the email above</li>
+                                <li>Amount: <strong>${{ plan.price }} USD</strong></li>
+                                <li>Take a screenshot of the confirmation</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bank Transfer -->
+                <div class="col-md-6 mb-3">
+                    <div class="card h-100 border-success">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="bi bi-bank"></i> Option 2: Bank Transfer (SWIFT)</h5>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Bank details:</strong></p>
+                            <div class="bg-light p-3 rounded mb-3 small">
+                                <p class="mb-2"><strong>Bank Name:</strong><br>{{ payment_info.bank.name }}</p>
+                                <p class="mb-2"><strong>Account Holder:</strong><br>{{ payment_info.bank.holder }}</p>
+                                <p class="mb-2"><strong>Currency:</strong> {{ payment_info.bank.currency }}</p>
+                                <p class="mb-2"><strong>SWIFT Code:</strong><br><code>{{ payment_info.bank.swift }}</code></p>
+                                <p class="mb-0"><strong>IBAN:</strong><br><code>{{ payment_info.bank.iban }}</code></p>
+                            </div>
+                            
+                            <p class="mb-2"><strong>Important:</strong></p>
+                            <ul class="small mb-0">
+                                <li>Include order reference in transfer notes</li>
+                                <li>SWIFT transfers may take 3-5 business days</li>
+                                <li>Your bank may charge transfer fees</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Receipt Form -->
+            <div class="card border-warning">
+                <div class="card-header bg-warning">
+                    <h5 class="mb-0"><i class="bi bi-cloud-upload"></i> Step 2: Upload Payment Receipt</h5>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <p class="mb-4">After making payment, upload your receipt below:</p>
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_buyer_email" class="form-label">{{ form.buyer_email.label }} <span class="text-danger">*</span></label>
+                                {{ form.buyer_email }}
+                                <small class="form-text text-muted">{{ form.buyer_email.help_text }}</small>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="id_buyer_name" class="form-label">{{ form.buyer_name.label }}</label>
+                                {{ form.buyer_name }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_payment_method" class="form-label">{{ form.payment_method.label }} <span class="text-danger">*</span></label>
+                            {{ form.payment_method }}
+                            <small class="form-text text-muted">{{ form.payment_method.help_text }}</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_receipt_file" class="form-label">{{ form.receipt_file.label }} <span class="text-danger">*</span></label>
+                            {{ form.receipt_file }}
+                            <small class="form-text text-muted">{{ form.receipt_file.help_text }}</small>
+                        </div>
+
+                        <div class="alert alert-light border">
+                            <p class="mb-2"><strong>What happens next?</strong></p>
+                            <ol class="mb-0">
+                                <li>Your receipt will be reviewed by our team</li>
+                                <li>Verification usually takes less than 24 hours</li>
+                                <li>You'll receive an email with your download link</li>
+                                <li>You can download the plan up to 5 times</li>
+                            </ol>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-upload"></i> Submit Receipt & Create Order
+                            </button>
+                            <a href="{% url 'plans:detail' slug=plan.slug %}" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Trust Indicators -->
+            <div class="mt-4 text-center">
+                <small class="text-muted">
+                    <i class="bi bi-shield-check"></i>
+                    Secure payment verification • Human review • No automatic charges
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

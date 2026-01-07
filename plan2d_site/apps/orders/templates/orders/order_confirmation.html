@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+{% block title %}Order Confirmation - {{ order.order_number }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Success Header -->
+            <div class="text-center mb-5">
+                {% if order.payment_status == 'completed' %}
+                <div class="mb-3">
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                </div>
+                <h1 class="mb-3">Order Complete!</h1>
+                <p class="lead text-muted">Your plan is ready for download</p>
+                {% elif order.payment_status == 'rejected' %}
+                <div class="mb-3">
+                    <i class="bi bi-x-circle-fill text-danger" style="font-size: 4rem;"></i>
+                </div>
+                <h1 class="mb-3">Payment Review Required</h1>
+                <p class="lead text-muted">Please see details below</p>
+                {% else %}
+                <div class="mb-3">
+                    <i class="bi bi-clock-fill text-warning" style="font-size: 4rem;"></i>
+                </div>
+                <h1 class="mb-3">Order Received!</h1>
+                <p class="lead text-muted">Your receipt is under review (usually within 24 hours)</p>
+                {% endif %}
+            </div>
+
+            <!-- Order Details -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Order Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Order Number:</strong></p>
+                            <p class="text-muted">{{ order.order_number }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Order Date:</strong></p>
+                            <p class="text-muted">{{ order.created_at|date:"F d, Y \a\t g:i A" }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Email:</strong></p>
+                            <p class="text-muted">{{ order.buyer_email }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Payment Status:</strong></p>
+                            <p>
+                                {% if order.payment_status == 'completed' %}
+                                    <span class="badge bg-success">{{ order.get_payment_status_display }}</span>
+                                {% elif order.payment_status == 'pending' %}
+                                    <span class="badge bg-warning">{{ order.get_payment_status_display }}</span>
+                                {% elif order.payment_status == 'rejected' %}
+                                    <span class="badge bg-danger">{{ order.get_payment_status_display }}</span>
+                                {% elif order.payment_status == 'failed' %}
+                                    <span class="badge bg-danger">{{ order.get_payment_status_display }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ order.get_payment_status_display }}</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    {% if order.payment_method %}
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Payment Method:</strong></p>
+                            <p class="text-muted">
+                                {% if order.payment_method == 'payoneer' %}
+                                    💳 Payoneer Transfer
+                                {% elif order.payment_method == 'bank_transfer' %}
+                                    🏦 Bank Transfer (SWIFT)
+                                {% else %}
+                                    {{ order.get_payment_method_display }}
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Verification Status:</strong></p>
+                            <p>
+                                {% if order.verified_at %}
+                                    <span class="badge bg-info">✓ Verified {{ order.verified_at|date:"M d, Y" }}</span>
+                                {% else %}
+                                    <span class="badge bg-warning">⏳ Under Review</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <hr>
+
+                    <h6 class="mb-3">Plan Details</h6>
+                    <div class="d-flex align-items-start">
+                        {% if order.plan.get_primary_image %}
+                        <img src="{{ order.plan.get_primary_image.image.url }}" 
+                             alt="{{ order.plan.title }}" 
+                             class="me-3"
+                             style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
+                        {% endif %}
+                        <div>
+                            <h5 class="mb-1">{{ order.plan.title }}</h5>
+                            <p class="text-muted mb-2">{{ order.plan.reference }}</p>
+                            <p class="mb-1">{{ order.plan.bedrooms }} bed • {{ order.plan.bathrooms }} bath • {{ order.plan.total_area_sqm }} m²</p>
+                            <p class="mb-0"><strong>Price: ${{ order.price_paid }}</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Download Section -->
+            {% if order.payment_status == 'completed' %}
+            <div class="card border-success mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">📥 Download Your Plan</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">Your plan is ready! Click the button below to download.</p>
+                    
+                    <div class="d-grid gap-2 mb-3">
+                        <a href="{% url 'secure_download' access_token=order.access_token %}" 
+                           class="btn btn-success btn-lg">
+                            <i class="bi bi-download"></i> Download {{ order.plan.reference }}.pdf
+                        </a>
+                    </div>
+
+                    <div class="alert alert-info mb-0">
+                        <p class="mb-2"><strong>Download Information:</strong></p>
+                        <ul class="mb-0">
+                            <li>Downloads used: {{ order.download_count }} of {{ order.max_downloads }}</li>
+                            <li>Remaining downloads: {{ order.downloads_remaining }}</li>
+                            {% if order.access_expires_at %}
+                            <li>Access expires: {{ order.access_expires_at|date:"F d, Y" }}</li>
+                            {% else %}
+                            <li>Access: Lifetime</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <!-- Payment Pending or Rejected -->
+            {% if order.payment_status == 'rejected' %}
+            <div class="card border-danger mb-4">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">❌ Payment Not Verified</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-danger mb-3">
+                        <strong>Unfortunately, we were unable to verify your payment with the receipt you provided.</strong>
+                    </p>
+                    
+                    {% if order.admin_comment %}
+                    <div class="alert alert-warning">
+                        <strong>Admin Note:</strong> {{ order.admin_comment }}
+                    </div>
+                    {% endif %}
+                    
+                    <h6 class="mb-3">What to do next:</h6>
+                    <ol>
+                        <li class="mb-2">Double-check that you sent the payment to the correct account:
+                            <ul class="mt-2">
+                                <li><strong>Payoneer:</strong> bacseried@gmail.com (Issoufou Abdou Chéfou)</li>
+                                <li><strong>Bank of Africa Niger:</strong> SWIFT: AFRINENIXXX, IBAN: NE58NE0380100400440716000006</li>
+                            </ul>
+                        </li>
+                        <li class="mb-2">Verify the receipt clearly shows:
+                            <ul class="mt-2">
+                                <li>Transaction date</li>
+                                <li>Amount (${{ order.price_paid }})</li>
+                                <li>Recipient details</li>
+                                <li>Your name</li>
+                            </ul>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{% url 'orders:checkout' plan_id=order.plan.id %}" class="btn btn-primary">
+                                Submit New Receipt
+                            </a>
+                        </li>
+                    </ol>
+                    
+                    <div class="alert alert-info mb-0">
+                        <i class="bi bi-envelope"></i>
+                        Need help? Contact us at <strong>{{ support_email|default:"support@freehouseplan.com" }}</strong> with your order number: <strong>{{ order.order_number }}</strong>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <!-- Payment Pending -->
+            <div class="card border-warning mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">⏳ Receipt Under Review</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">Thank you for uploading your payment receipt! Our team is reviewing it now.</p>
+                    
+                    <h6 class="mb-3">What happens next:</h6>
+                    <ol>
+                        <li class="mb-2"><strong>Review:</strong> Our team will verify your payment (usually within 24 hours)</li>
+                        <li class="mb-2"><strong>Approval:</strong> You'll receive an email with your download link once approved</li>
+                        <li class="mb-2"><strong>Questions:</strong> If we need more information, we'll contact you at {{ order.buyer_email }}</li>
+                    </ol>
+
+                    <div class="alert alert-info mb-0">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>Important:</strong> Save this page or bookmark your order number 
+                        ({{ order.order_number }}) for future reference. You'll receive an email notification once your payment is verified.
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endif %}
+
+            <!-- Email Confirmation -->
+            <div class="alert alert-light border">
+                <p class="mb-2"><strong>📧 Email Confirmation</strong></p>
+                <p class="mb-0 text-muted">
+                    We've sent a confirmation email to <strong>{{ order.buyer_email }}</strong> with 
+                    {% if order.payment_status == 'completed' %}
+                    your download link.
+                    {% else %}
+                    payment instructions.
+                    {% endif %}
+                    <br>
+                    <small>Didn't receive it? Check your spam folder or contact support.</small>
+                </p>
+            </div>
+
+            <!-- Actions -->
+            <div class="text-center mt-4">
+                <a href="{% url 'plans:list' %}" class="btn btn-outline-primary me-2">
+                    Browse More Plans
+                </a>
+                <a href="{% url 'orders:my_orders' %}" class="btn btn-outline-secondary">
+                    View My Orders
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

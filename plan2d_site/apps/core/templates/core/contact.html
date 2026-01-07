@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us - {{ brand_domain }}{% endblock %}
+
+{% block meta_description %}Get in touch with {{ brand_domain }}. We're here to help with questions about free previews, upgrades, and build-ready house plans.{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<section class="py-3" style="background: var(--color-gray-50); border-bottom: 1px solid var(--color-gray-200);">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'core:home' %}"><i class="bi bi-house-door"></i> Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Contact</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- Page Header -->
+<section class="page-header-tight" style="background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 50%, #BFDBFE 100%);">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="badge badge-primary mb-2">
+                    <i class="bi bi-envelope"></i> Get In Touch
+                </div>
+                <h1 class="display-4 fw-bold mb-2">Contact Us</h1>
+                <p class="text-muted mb-0">Have a question? We're here to help</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick navigation helpers -->
+<section class="py-3" style="background: #ffffff; border-bottom: 1px solid var(--color-gray-200);">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div class="text-muted" style="font-size: var(--text-sm);">
+                <i class="bi bi-node-plus"></i> Ready when you need to return to browsing or learn more.
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'plans:list' %}" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-grid-3x2"></i> Browse Plans
+                </a>
+                <a href="{% url 'core:home' %}" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-arrow-left"></i> Back to Home
+                </a>
+                <a href="{% url 'core:faq' %}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-question-circle"></i> View FAQ
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Content -->
+<section class="py-3 bg-white">
+    <div class="container">
+        <div class="row g-3">
+            
+            <!-- Contact Form -->
+            <div class="col-lg-8 mb-3">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header text-white" style="background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);">
+                        <h3 class="mb-0"><i class="bi bi-chat-dots"></i> Send Us a Message</h3>
+                    </div>
+                    <div class="card-body p-3" id="email">
+                        
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.full_name.id_for_label }}" class="form-label">
+                                    <i class="bi bi-person"></i> {{ form.full_name.label }}
+                                </label>
+                                {{ form.full_name }}
+                                {% if form.full_name.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.full_name.errors %}
+                                            <i class="bi bi-exclamation-circle"></i> {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.email.id_for_label }}" class="form-label">
+                                    <i class="bi bi-envelope-at"></i> {{ form.email.label }}
+                                </label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.email.errors %}
+                                            <i class="bi bi-exclamation-circle"></i> {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.subject.id_for_label }}" class="form-label">
+                                    <i class="bi bi-tag"></i> {{ form.subject.label }}
+                                </label>
+                                {{ form.subject }}
+                                {% if form.subject.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.subject.errors %}
+                                            <i class="bi bi-exclamation-circle"></i> {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.message.id_for_label }}" class="form-label">
+                                    <i class="bi bi-chat-text"></i> {{ form.message.label }}
+                                </label>
+                                {{ form.message }}
+                                {% if form.message.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.message.errors %}
+                                            <i class="bi bi-exclamation-circle"></i> {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.attachment.id_for_label }}" class="form-label">
+                                    <i class="bi bi-paperclip"></i> {{ form.attachment.label }}
+                                </label>
+                                {{ form.attachment }}
+                                {% if form.attachment.help_text %}
+                                    <div class="form-text">
+                                        <i class="bi bi-info-circle"></i> {{ form.attachment.help_text }}
+                                    </div>
+                                {% endif %}
+                                {% if form.attachment.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.attachment.errors %}
+                                            <i class="bi bi-exclamation-circle"></i> {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="alert" style="background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%); border: none;">
+                                <small>
+                                    <i class="bi bi-shield-check text-primary"></i> <strong>Your privacy matters:</strong> 
+                                    Your information is reviewed by a real human and never shared with third parties.
+                                </small>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-send"></i> Send Message
+                            </button>
+                        </form>
+                        
+                        {% if messages %}
+                            <div class="mt-3">
+                                {% for message in messages %}
+                                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                        <i class="bi bi-{% if message.tags == 'success' %}check-circle-fill{% elif message.tags == 'warning' %}exclamation-triangle-fill{% else %}info-circle-fill{% endif %}"></i> 
+                                        {{ message }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact Information -->
+            <div class="col-lg-4">
+                <!-- WhatsApp Contact -->
+                <div class="card shadow-sm mb-3" id="whatsapp" style="border: 2px solid #25D366; background: linear-gradient(135deg, #F0FFF4 0%, #DCFCE7 100%);">
+                    <div class="card-body p-3 text-center">
+                        <div class="icon-box mb-2 mx-auto" style="background: #25D366; width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                            <i class="bi bi-whatsapp" style="font-size: 2rem; color: white;"></i>
+                        </div>
+                        <h5 class="fw-bold mb-2">Chat on WhatsApp</h5>
+                        <p class="small mb-2">Prefer instant messaging? Chat with us directly on WhatsApp for quick responses.</p>
+                        <a href="https://wa.me/{{ admin_whatsapp }}?text=Hello!%20I%20have%20a%20question%20about%20FreeHousePlan.com" 
+                           class="btn w-100" 
+                           target="_blank"
+                           style="background-color: #25D366; color: white; font-weight: 600;"
+                           onmouseover="this.style.backgroundColor='#20BA5A'" 
+                           onmouseout="this.style.backgroundColor='#25D366'">
+                            <i class="bi bi-whatsapp"></i> Start WhatsApp Chat
+                        </a>
+                        <small class="text-muted d-block mt-2">{{ admin_whatsapp }}</small>
+                    </div>
+                </div>
+                
+                <div class="card shadow-sm mb-3" style="border-left: 4px solid var(--color-secondary);">
+                    <div class="card-body p-3">
+                        <div class="icon-box mb-2" style="background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);">
+                            <i class="bi bi-clock" style="font-size: 1.5rem; color: var(--color-secondary);"></i>
+                        </div>
+                        <h5 class="fw-bold mb-2">Quick Response</h5>
+                        <p class="small mb-0">
+                            We typically respond to all inquiries within <strong>24-48 hours</strong> during business days.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="card shadow-sm mb-3" style="border-left: 4px solid var(--color-accent);">
+                    <div class="card-body p-3">
+                        <div class="icon-box mb-2" style="background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);">
+                            <i class="bi bi-patch-question" style="font-size: 1.5rem; color: var(--color-accent);"></i>
+                        </div>
+                        <h5 class="fw-bold mb-2">Before You Contact</h5>
+                        <p class="small mb-3">
+                            Many common questions are answered in our FAQ section. It might save you time!
+                        </p>
+                        <a href="{% url 'core:faq' %}" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-arrow-right-circle"></i> Visit FAQ
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="card shadow-sm" style="border-left: 4px solid var(--color-primary);">
+                    <div class="card-body p-3">
+                        <div class="icon-box mb-2" style="background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);">
+                            <i class="bi bi-info-circle" style="font-size: 1.5rem; color: var(--color-primary);"></i>
+                        </div>
+                        <h5 class="fw-bold mb-2">What We Can Help With</h5>
+                        <ul class="small list-unstyled mb-0">
+                            <li class="mb-1"><i class="bi bi-check-circle-fill text-success"></i> Questions about specific plans</li>
+                            <li class="mb-1"><i class="bi bi-check-circle-fill text-success"></i> Technical support</li>
+                            <li class="mb-1"><i class="bi bi-check-circle-fill text-success"></i> Purchase assistance</li>
+                            <li class="mb-1"><i class="bi bi-check-circle-fill text-success"></i> Custom plan inquiries</li>
+                            <li class="mb-1"><i class="bi bi-check-circle-fill text-success"></i> File format questions</li>
+                            <li><i class="bi bi-check-circle-fill text-success"></i> General information</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Compact Support Note (keeps prior content without a full-width extra section) -->
+                <div class="card shadow-sm mt-3" style="background: linear-gradient(135deg, #F8FAFC 0%, #E5E7EB 100%);">
+                    <div class="card-body p-3">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="icon-box" style="background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);">
+                                <i class="bi bi-headset" style="font-size: 1.25rem; color: var(--color-primary);"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Professional Support for Your Project</h6>
+                                <p class="small text-muted mb-0">
+                                    Whether you're a builder, architect, or homeowner, we're committed to providing the support you need to successfully use our plans.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>
+{% endblock %}

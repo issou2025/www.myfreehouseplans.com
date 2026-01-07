@@ -1,0 +1,112 @@
+<div
+  class="plan-dossier-card premium-plan-card h-100"
+  data-plan-card
+  data-plan-bedrooms="{{ plan.bedrooms|default_if_none:'0' }}"
+  data-plan-bathrooms="{{ plan.bathrooms|default_if_none:'0' }}"
+  data-plan-floors="{{ plan.floors|default_if_none:'0' }}"
+  data-plan-area="{{ plan.total_area_sqm|default_if_none:'0' }}"
+  data-plan-category="{{ plan.category.slug }}"
+  data-plan-type="{{ plan.plan_type|default:'' }}"
+  data-plan-pack-free="{% if plan.has_free_plan %}true{% else %}false{% endif %}"
+  data-plan-pack-standard="{% if plan.has_paid_pdf_offer %}true{% else %}false{% endif %}"
+  data-plan-pack-pro="{% if plan.has_pro_pack %}true{% else %}false{% endif %}"
+  data-plan-file-pdf="{% if plan.has_paid_pdf_offer %}true{% else %}false{% endif %}"
+  data-plan-file-revit="{% if plan.has_revit_offer %}true{% else %}false{% endif %}"
+  data-plan-file-ifc="{% if plan.has_ifc_offer %}true{% else %}false{% endif %}"
+  data-plan-file-dwg="{% if plan.has_dwg_asset %}true{% else %}false{% endif %}"
+>
+  <a class="plan-dossier-thumb premium-plan-image" href="{% url 'plans:detail' plan.slug %}" aria-label="View {{ plan.title }}">
+    {% with primary_image=plan.get_primary_image %}
+      {% if primary_image %}
+        {% with asset=primary_image.image %}
+          <img
+            src="{{ asset.url }}"
+            srcset="{{ asset.url }} 1x, {{ asset.url }} 2x"
+            sizes="(min-width: 1400px) 360px, (min-width: 992px) 300px, (min-width: 768px) 45vw, 90vw"
+            width="{{ asset.width|default:'1600' }}"
+            height="{{ asset.height|default:'1200' }}"
+            alt="{{ plan.title }} floor plan preview"
+            loading="lazy"
+            decoding="async"
+          >
+        {% endwith %}
+      {% else %}
+        <div class="plan-dossier-thumb--empty" aria-label="High resolution preview coming soon">
+          <span>Preview Coming Soon</span>
+        </div>
+      {% endif %}
+    {% endwith %}
+  </a>
+
+  <div class="plan-dossier-body premium-plan-content">
+    <div class="plan-dossier-meta">
+      <div class="plan-dossier-cat premium-badge premium-badge-primary">{{ plan.category.name }}</div>
+      {% if plan.has_revit_offer %}
+        <div class="plan-dossier-cat premium-badge" aria-label="Editable Revit file available">
+          Revit file ready
+        </div>
+      {% endif %}
+      {% if plan.has_ifc_offer %}
+        <div class="plan-dossier-cat premium-badge" aria-label="IFC file available">
+          IFC file ready
+        </div>
+      {% endif %}
+      {% if plan.has_pro_pack %}
+        <div class="plan-dossier-cat premium-badge premium-badge-accent" aria-label="Pack 3 – Pro BIM enabled">
+          Pack 3 · Pro
+        </div>
+      {% endif %}
+    </div>
+
+    <h3 class="plan-dossier-title premium-plan-title">
+      <a href="{% url 'plans:detail' plan.slug %}">{{ plan.title }}</a>
+      <div class="plan-dossier-ref plan-dossier-ref--under-title">{{ plan.reference }}</div>
+    </h3>
+
+    <div class="plan-dossier-specs premium-plan-specs" aria-label="Architectural summary">
+      <div class="plan-dossier-spec premium-plan-spec">
+        <span class="premium-plan-spec-label">Bedrooms</span>
+        <strong class="premium-plan-spec-value">{{ plan.bedrooms }}</strong>
+      </div>
+      <div class="plan-dossier-spec premium-plan-spec">
+        <span class="premium-plan-spec-label">Bathrooms</span>
+        <strong class="premium-plan-spec-value">{{ plan.bathrooms }}</strong>
+      </div>
+      <div class="plan-dossier-spec premium-plan-spec">
+        <span class="premium-plan-spec-label">Area</span>
+        <strong class="premium-plan-spec-value">{{ plan.total_area_sqm }} m²</strong>
+      </div>
+      <div class="plan-dossier-spec premium-plan-spec">
+        <span class="premium-plan-spec-label">Floors</span>
+        <strong class="premium-plan-spec-value">{{ plan.floors|default:"—" }}</strong>
+      </div>
+    </div>
+
+    <p class="plan-dossier-excerpt premium-text premium-text-secondary">{{ plan.get_seo_description|truncatewords:20 }}</p>
+
+    {% if show_ctas %}
+      <div class="plan-dossier-ctas premium-plan-actions">
+        {% if plan.has_free_plan %}
+          <a class="btn btn-outline-success premium-btn-secondary btn-sm flex-fill" href="{{ plan.free_plan_file.url }}" download>
+            <i class="bi bi-download"></i> Download free layout
+          </a>
+        {% endif %}
+        {% if plan.pack_2_gumroad_zip_url %}
+          <a class="btn btn-primary premium-btn-primary btn-sm flex-fill" href="{{ plan.pack_2_gumroad_zip_url }}" rel="noopener">
+            <i class="bi bi-lock-fill"></i> Buy Pack 2 ZIP
+          </a>
+        {% endif %}
+      </div>
+      {% if plan.has_revit_offer %}
+        <p class="premium-text premium-text-secondary mt-2 mb-0" style="font-size: var(--text-xs);">
+          Optional Revit (.RVT) file sold securely via Gumroad.
+        </p>
+      {% endif %}
+      {% if plan.has_ifc_offer %}
+        <p class="premium-text premium-text-secondary mt-1 mb-0" style="font-size: var(--text-xs);">
+          IFC (open BIM) export available via Gumroad.
+        </p>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>

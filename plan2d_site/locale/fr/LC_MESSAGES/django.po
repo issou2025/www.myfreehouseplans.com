@@ -1,0 +1,223 @@
+# French translations for Plan2D website.
+# Copyright (C) 2026 Plan2D
+# This file is distributed under the same license as the Plan2D package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Plan2D 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-01 12:00+0000\n"
+"PO-Revision-Date: 2026-01-01 12:00+0000\n"
+"Last-Translator: Plan2D Team\n"
+"Language-Team: French\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+# Navigation
+msgid "Home"
+msgstr "Accueil"
+
+msgid "Plans"
+msgstr "Plans"
+
+msgid "How It Works"
+msgstr "Comment ça marche"
+
+msgid "About"
+msgstr "À propos"
+
+msgid "Contact"
+msgstr "Contact"
+
+# Footer sections
+msgid "Explore"
+msgstr "Explorer"
+
+msgid "Help"
+msgstr "Aide"
+
+msgid "Why Choose Us?"
+msgstr "Pourquoi nous choisir ?"
+
+msgid "Payment Instructions"
+msgstr "Instructions de paiement"
+
+msgid "WhatsApp Contact"
+msgstr "Contact WhatsApp"
+
+msgid "Email Contact"
+msgstr "Contact par email"
+
+msgid "My Orders"
+msgstr "Mes commandes"
+
+# Footer content
+msgid "Professional 2D house plans designed by experts using Autodesk Revit. Every plan is human-designed with precision and care—perfect for builders, architects, and homeowners."
+msgstr "Plans de maison 2D professionnels conçus par des experts utilisant Autodesk Revit. Chaque plan est conçu humainement avec précision et soin—parfait pour les constructeurs, architectes et propriétaires."
+
+msgid "Human-Designed"
+msgstr "Conçu par des humains"
+
+msgid "CAD Professional"
+msgstr "Professionnel CAO"
+
+msgid "Professional CAD Designs"
+msgstr "Conceptions CAO professionnelles"
+
+msgid "Instant Digital Download"
+msgstr "Téléchargement numérique instantané"
+
+msgid "No AI-Generated Plans"
+msgstr "Aucun plan généré par IA"
+
+msgid "Ready for Construction"
+msgstr "Prêt pour la construction"
+
+msgid "All rights reserved. Made with"
+msgstr "Tous droits réservés. Fait avec"
+
+msgid "for builders worldwide."
+msgstr "pour les constructeurs du monde entier."
+
+# Home page - Hero section
+msgid "Plan2D - Professional House Plans by Expert Engineers"
+msgstr "Plan2D - Plans de maison professionnels par des ingénieurs experts"
+
+msgid "Professional 2D house plans designed by experts using Autodesk Revit. Free preview plans and premium CAD files with full dimensions available for instant download."
+msgstr "Plans de maison 2D professionnels conçus par des experts utilisant Autodesk Revit. Plans d'aperçu gratuits et fichiers CAO premium avec dimensions complètes disponibles en téléchargement instantané."
+
+msgid "Professional House Plans.<br>\n                    <span style=\"color: var(--color-primary);\">Built by Engineers.</span>"
+msgstr "Plans de maison professionnels.<br>\n                    <span style=\"color: var(--color-primary);\">Conçus par des ingénieurs.</span>"
+
+msgid "Get construction-ready 2D floor plans designed by professionals using Autodesk Revit. No AI shortcuts. No guesswork. Just accurate, reliable plans for your next project."
+msgstr "Obtenez des plans d'étage 2D prêts pour la construction, conçus par des professionnels utilisant Autodesk Revit. Pas de raccourcis IA. Pas d'approximation. Juste des plans précis et fiables pour votre prochain projet."
+
+msgid "Browse Plans"
+msgstr "Parcourir les plans"
+
+msgid "Learn More"
+msgstr "En savoir plus"
+
+msgid "Instant Download"
+msgstr "Téléchargement instantané"
+
+msgid "No AI Generated"
+msgstr "Pas de génération IA"
+
+msgid "Human-Designed Quality"
+msgstr "Qualité conçue par l'humain"
+
+msgid "Every plan is created using professional Autodesk Revit software by experienced engineers—not AI algorithms."
+msgstr "Chaque plan est créé avec le logiciel professionnel Autodesk Revit par des ingénieurs expérimentés—pas par des algorithmes IA."
+
+msgid "Human"
+msgstr "Humain"
+
+msgid "Access"
+msgstr "Accès"
+
+# How It Works section
+msgid "Get your professional house plans in 3 simple steps"
+msgstr "Obtenez vos plans de maison professionnels en 3 étapes simples"
+
+msgid "1. Browse Plans"
+msgstr "1. Parcourir les plans"
+
+msgid "Explore our collection of professionally designed 2D house plans. Filter by bedrooms, area, and style to find your perfect match."
+msgstr "Explorez notre collection de plans de maison 2D conçus professionnellement. Filtrez par chambres, superficie et style pour trouver votre correspondance parfaite."
+
+msgid "2. Purchase & Download"
+msgstr "2. Acheter et télécharger"
+
+msgid "Secure payment via Payoneer or bank transfer. Once verified, get instant access to your CAD files with full dimensions."
+msgstr "Paiement sécurisé via Payoneer ou virement bancaire. Une fois vérifié, obtenez un accès instantané à vos fichiers CAO avec dimensions complètes."
+
+msgid "3. Start Building"
+msgstr "3. Commencer la construction"
+
+msgid "Take your plans to any builder or contractor. Our files are compatible with standard construction practices worldwide."
+msgstr "Apportez vos plans à n'importe quel constructeur ou entrepreneur. Nos fichiers sont compatibles avec les pratiques de construction standard dans le monde entier."
+
+# Common buttons and actions
+msgid "View All"
+msgstr "Voir tout"
+
+msgid "Download"
+msgstr "Télécharger"
+
+msgid "Free"
+msgstr "Gratuit"
+
+msgid "Premium"
+msgstr "Premium"
+
+msgid "Get Started"
+msgstr "Commencer"
+
+msgid "Learn more"
+msgstr "En savoir plus"
+
+msgid "Back"
+msgstr "Retour"
+
+msgid "Next"
+msgstr "Suivant"
+
+msgid "Submit"
+msgstr "Soumettre"
+
+msgid "Send"
+msgstr "Envoyer"
+
+msgid "Search"
+msgstr "Rechercher"
+
+# Plan details
+msgid "Bedrooms"
+msgstr "Chambres"
+
+msgid "Bathrooms"
+msgstr "Salles de bain"
+
+msgid "Area"
+msgstr "Superficie"
+
+msgid "Price"
+msgstr "Prix"
+
+msgid "Details"
+msgstr "Détails"
+
+msgid "Specifications"
+msgstr "Spécifications"
+
+msgid "Features"
+msgstr "Caractéristiques"
+
+# Messages
+msgid "Thank you"
+msgstr "Merci"
+
+msgid "Success"
+msgstr "Succès"
+
+msgid "Error"
+msgstr "Erreur"
+
+msgid "Loading..."
+msgstr "Chargement..."
+
+msgid "Please wait"
+msgstr "Veuillez patienter"
+
+msgid "Required field"
+msgstr "Champ requis"
+
+msgid "Invalid email"
+msgstr "Email invalide"
+
+msgid "Invalid phone number"
+msgstr "Numéro de téléphone invalide"

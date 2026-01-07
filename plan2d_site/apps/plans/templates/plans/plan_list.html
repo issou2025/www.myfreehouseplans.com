@@ -1,0 +1,514 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Browse Free House Plans | {{ brand_domain }}{% endblock %}
+
+{% block og_title %}Browse Free House Plans | {{ brand_domain }}{% endblock %}
+{% block twitter_title %}Browse Free House Plans | {{ brand_domain }}{% endblock %}
+
+{% block meta_description %}Browse free house plans on {{ brand_domain }}. Download free previews without dimensions, then upgrade to fully dimensioned build-ready plans when you're ready to build.{% endblock %}
+
+{% block og_description %}Browse free house plans on {{ brand_domain }}. Download free previews without dimensions, then upgrade to fully dimensioned build-ready plans when you're ready to build.{% endblock %}
+{% block twitter_description %}Browse free house plans on {{ brand_domain }}. Download free previews without dimensions, then upgrade to fully dimensioned build-ready plans when you're ready to build.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/plan-packs-visual.css' %}">
+<link rel="stylesheet" href="{% static 'css/layout-spacing-optimized.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('[data-plan-filter-form]');
+    if (!form) return;
+
+    const cards = Array.from(document.querySelectorAll('[data-plan-card]'));
+    const resultsEl = document.querySelector('[data-plan-results-count]');
+    const quickButtons = Array.from(form.querySelectorAll('[data-range-button]'));
+    const minAreaInput = form.querySelector('input[name="min_area"]');
+    const maxAreaInput = form.querySelector('input[name="max_area"]');
+
+    const bedroomsInput = form.querySelector('#bedrooms');
+    const bathroomsInput = form.querySelector('#bathrooms');
+    const floorsInput = form.querySelector('#floors');
+    const categoryInput = form.querySelector('#category');
+    const planTypeInput = form.querySelector('#plan_type');
+
+    const packInputs = () => Array.from(form.querySelectorAll('input[name="pack_levels"]:checked')).map(el => el.value);
+    const fileInputs = () => Array.from(form.querySelectorAll('input[name="file_types"]:checked')).map(el => el.value);
+
+    const mobileToggle = document.querySelector('[data-filter-mobile-toggle]');
+    const collapsibleSections = Array.from(form.querySelectorAll('[data-filter-collapsible]'));
+    const levelFourSection = collapsibleSections.find(section => section.dataset.filterLevel === '4');
+    const autoOpenSections = collapsibleSections.filter(section => section.dataset.filterLevel !== '4');
+
+    if (levelFourSection) {
+        levelFourSection.removeAttribute('open');
+    }
+
+    const toNumber = (val) => {
+        const num = parseFloat(val);
+        return Number.isNaN(num) ? null : num;
+    };
+
+    const syncQuickButtons = () => {
+        quickButtons.forEach(btn => {
+            const minMatch = (minAreaInput.value || '') === (btn.dataset.min || '');
+            const maxMatch = (maxAreaInput.value || '') === (btn.dataset.max || '');
+            btn.classList.toggle('is-active', minMatch && maxMatch);
+        });
+    };
+
+    const applyFilters = () => {
+        const bedroomsVal = bedroomsInput ? bedroomsInput.value.trim() : '';
+        const bathroomsVal = bathroomsInput ? toNumber(bathroomsInput.value.trim()) : null;
+        const floorsVal = floorsInput ? floorsInput.value.trim() : '';
+        const minAreaVal = toNumber(minAreaInput && minAreaInput.value.trim());
+        const maxAreaVal = toNumber(maxAreaInput && maxAreaInput.value.trim());
+        const categoryVal = categoryInput ? categoryInput.value.trim() : '';
+        const planTypeVal = planTypeInput ? planTypeInput.value.trim() : '';
+        const selectedPacks = packInputs();
+        const selectedFiles = fileInputs();
+
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+            const data = card.dataset;
+            const bedroomsOk = !bedroomsVal || (data.planBedrooms || '') === bedroomsVal;
+            const bathroomsOk = bathroomsVal === null || (toNumber(data.planBathrooms) ?? 0) >= bathroomsVal;
+            const floorsOk = !floorsVal || (data.planFloors || '') === floorsVal;
+            const areaVal = toNumber(data.planArea) ?? 0;
+            const minAreaOk = minAreaVal === null || areaVal >= minAreaVal;
+            const maxAreaOk = maxAreaVal === null || areaVal <= maxAreaVal;
+            const categoryOk = !categoryVal || (data.planCategory || '') === categoryVal;
+            const typeOk = !planTypeVal || (data.planType || '') === planTypeVal;
+
+            const packsOk = !selectedPacks.length || selectedPacks.every(val => {
+                if (val === 'free') return data.planPackFree === 'true';
+                if (val === 'standard') return data.planPackStandard === 'true';
+                if (val === 'pro') return data.planPackPro === 'true';
+                return true;
+            });
+
+            const filesOk = !selectedFiles.length || selectedFiles.every(val => {
+                if (val === 'pdf') return data.planFilePdf === 'true';
+                if (val === 'revit') return data.planFileRevit === 'true';
+                if (val === 'ifc') return data.planFileIfc === 'true';
+                if (val === 'dwg') return data.planFileDwg === 'true';
+                return true;
+            });
+
+            const show = bedroomsOk && bathroomsOk && floorsOk && minAreaOk && maxAreaOk && categoryOk && typeOk && packsOk && filesOk;
+            card.style.display = show ? '' : 'none';
+            if (show) visibleCount += 1;
+        });
+
+        if (resultsEl) {
+            const total = resultsEl.dataset.planResultsTotal;
+            resultsEl.textContent = total ? `Showing ${visibleCount} of ${total} plans now` : `Showing ${visibleCount} plans now`;
+        }
+
+        syncQuickButtons();
+    };
+
+    quickButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (minAreaInput) minAreaInput.value = btn.dataset.min || '';
+            if (maxAreaInput) maxAreaInput.value = btn.dataset.max || '';
+            quickButtons.forEach(b => b.classList.remove('is-active'));
+            btn.classList.add('is-active');
+            applyFilters();
+        });
+    });
+
+    const watchInputs = Array.from(form.querySelectorAll('input, select'));
+    watchInputs.forEach(el => {
+        el.addEventListener('input', applyFilters);
+        el.addEventListener('change', applyFilters);
+    });
+
+    // Mobile filter drawer behavior: keep plans visible by default
+    if (mobileToggle) {
+        mobileToggle.addEventListener('click', () => {
+            form.classList.toggle('is-mobile-open');
+            document.body.classList.toggle('plan-filter-drawer-open', form.classList.contains('is-mobile-open'));
+        });
+    }
+
+    form.addEventListener('submit', () => {
+        if (window.innerWidth < 768) {
+            form.classList.remove('is-mobile-open');
+            document.body.classList.remove('plan-filter-drawer-open');
+        }
+    });
+
+    if (autoOpenSections.length) {
+        const mq = window.matchMedia('(max-width: 767px)');
+        const syncCollapsibles = (event) => {
+            autoOpenSections.forEach(section => {
+                if (event.matches) {
+                    section.removeAttribute('open');
+                } else {
+                    section.setAttribute('open', 'open');
+                }
+            });
+        };
+        syncCollapsibles(mq);
+        mq.addEventListener('change', syncCollapsibles);
+    }
+
+    applyFilters();
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<section class="py-3" style="background: var(--color-gray-50); border-bottom: 1px solid var(--color-gray-200);">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'core:home' %}"><i class="bi bi-house-door"></i> Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Plans</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- Page Header - Clean & Professional -->
+<section class="py-5" style="background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%); border-bottom: 1px solid var(--color-gray-200);">
+    <div class="container">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8">
+                <h1 class="mb-3" style="font-size: 2.5rem; font-weight: 800; color: var(--color-gray-900);">
+                    Plans drafted by people who build
+                </h1>
+                <p class="lead text-muted mb-0" style="font-size: var(--text-lg); max-width: 60ch;">
+                    Preview every layout instantly. When your project is confirmed, unlock the full dimensioned set without having to search elsewhere.
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <div class="d-inline-flex align-items-center gap-3 p-4" style="background: white; border-radius: var(--radius-xl); box-shadow: var(--shadow-md);">
+                    <div class="text-center">
+                        <div style="font-size: 2rem; font-weight: 800; color: var(--color-primary);">
+                            {{ displayed_plans_count|default:page_obj.paginator.count }}
+                        </div>
+                        <div style="font-size: var(--text-xs); color: var(--color-gray-600); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">
+                            Plans {% if is_filtered %}Matching{% else %}Available{% endif %}
+                        </div>
+                        {% if is_filtered and total_visible_plans %}
+                        <div style="font-size: var(--text-xs); color: var(--color-gray-500); margin-top: 0.5rem;">
+                            of {{ total_visible_plans }} total
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick navigation helpers -->
+<section class="py-3" style="background: #ffffff; border-bottom: 1px solid var(--color-gray-200);">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div class="text-muted" style="font-size: var(--text-sm);">
+                <i class="bi bi-map"></i> This catalog shows everything we offer—no hidden areas or surprise paywalls.
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'core:home' %}" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-arrow-left"></i> Back to home
+                </a>
+                <a href="{% url 'core:faq' %}" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-question-circle"></i> How ordering works
+                </a>
+                <a href="{% url 'core:contact' %}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-chat-dots"></i> Talk to the studio
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Filters -->
+<section class="py-3 border-bottom">
+    <div class="container">
+        <!-- Filter Active Indicator -->
+        {% if is_filtered and total_visible_plans and displayed_plans_count < total_visible_plans %}
+        <div class="alert alert-info d-flex align-items-center justify-content-between mb-3" role="alert">
+            <div class="d-flex align-items-center gap-2">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                </svg>
+                <strong>Filters on:</strong> Showing {{ displayed_plans_count }} of {{ total_visible_plans }} plans
+            </div>
+            <a href="{% url 'plans:list' %}" class="btn btn-sm btn-outline-primary">
+                View all plans
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- Mobile filter trigger: keeps plans visible by default on small screens -->
+        <div class="d-flex d-md-none justify-content-between align-items-center mb-2 plan-filter-mobile-bar">
+            <button type="button" class="btn btn-outline-primary btn-sm" data-filter-mobile-toggle>
+                <i class="bi bi-funnel"></i> Filters
+            </button>
+            <div class="text-muted small" data-filter-mobile-summary>
+                Refine by rooms, size, and files
+            </div>
+        </div>
+
+        <form method="get" class="plan-filter-system" data-plan-filter-form>
+            <div class="plan-filter-level plan-filter-level--primary">
+                <div class="plan-filter-level__header">
+                    <div class="plan-filter-level__tag">Level 1</div>
+                    <div>
+                        <h3 class="plan-filter-level__title">Match daily living first</h3>
+                        <p class="plan-filter-level__subtitle">Lifestyle filters stay visible so decisions feel human and fast.</p>
+                    </div>
+                </div>
+                <div class="plan-filter-grid plan-filter-grid--human">
+                    <div class="plan-filter-field plan-filter-field--stretch">
+                        <label for="search" class="form-label small">Search this catalog</label>
+                        <input type="text" class="form-control plan-input-compact" id="search" name="q" placeholder="Name, reference, or size" value="{{ current_search }}">
+                    </div>
+                    <div class="plan-filter-field plan-filter-field--compact">
+                        <label for="bedrooms" class="form-label small">Bedrooms</label>
+                        <select class="form-select plan-input-compact" id="bedrooms" name="bedrooms">
+                            <option value="">Any</option>
+                            {% for i in "12345678" %}
+                                <option value="{{ i }}" {% if current_bedrooms == i %}selected{% endif %}>{{ i }}{% if i == "8" %}+{% endif %}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="plan-filter-field plan-filter-field--compact">
+                        <label for="bathrooms" class="form-label small">Bathrooms</label>
+                        <select class="form-select plan-input-compact" id="bathrooms" name="bathrooms">
+                            <option value="">Any</option>
+                            <option value="1">1+</option>
+                            <option value="2">2+</option>
+                            <option value="3">3+</option>
+                            <option value="4">4+</option>
+                            <option value="5">5+</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="plan-filter-level">
+                <div class="plan-filter-level__header">
+                    <div class="plan-filter-level__tag">Level 2</div>
+                    <div>
+                        <h3 class="plan-filter-level__title">Size &amp; budget clarity</h3>
+                        <p class="plan-filter-level__subtitle">Start with a quick range, then fine tune square meters.</p>
+                    </div>
+                </div>
+                <div class="plan-filter-grid plan-filter-grid--size">
+                    <div class="plan-filter-field">
+                        <label class="form-label small">Total area quick ranges</label>
+                        <div class="plan-filter-quick" role="group" aria-label="Total area quick ranges">
+                            <button type="button" class="plan-filter-quick__btn plan-btn-compact" data-range-button data-min="" data-max="">Any</button>
+                            <button type="button" class="plan-filter-quick__btn plan-btn-compact" data-range-button data-min="0" data-max="120">Starter &lt;120 m²</button>
+                            <button type="button" class="plan-filter-quick__btn plan-btn-compact" data-range-button data-min="120" data-max="180">Family 120-180 m²</button>
+                            <button type="button" class="plan-filter-quick__btn plan-btn-compact" data-range-button data-min="180" data-max="250">Large 180-250 m²</button>
+                            <button type="button" class="plan-filter-quick__btn plan-btn-compact" data-range-button data-min="250" data-max="">Estate 250+ m²</button>
+                        </div>
+                    </div>
+                    <div class="plan-filter-field plan-filter-field--range">
+                        <label class="form-label small">Total area inputs (m²)</label>
+                        <div class="input-group">
+                            <input type="number" min="0" step="10" class="form-control plan-input-compact" name="min_area" placeholder="Min" value="{{ current_min_area }}">
+                            <span class="input-group-text plan-input-addon">to</span>
+                            <input type="number" min="0" step="10" class="form-control plan-input-compact" name="max_area" placeholder="Max" value="{{ current_max_area }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <details class="plan-filter-level plan-filter-level--collapsible" data-filter-collapsible data-filter-level="3" open>
+                <summary>
+                    <div class="plan-filter-level__header mb-0">
+                        <div class="plan-filter-level__tag">Level 3</div>
+                        <div>
+                            <h3 class="plan-filter-level__title mb-0">Classify your search</h3>
+                            <p class="plan-filter-level__subtitle mb-0">Narrow by category or usage type once size feels right.</p>
+                        </div>
+                    </div>
+                </summary>
+                <div class="plan-filter-grid plan-filter-grid--typology">
+                    <div class="plan-filter-field plan-filter-field--compact">
+                        <label for="category" class="form-label small">Category</label>
+                        <select class="form-select plan-input-compact" id="category" name="category">
+                            <option value="">All Categories</option>
+                            {% for cat in categories %}
+                                <option value="{{ cat.slug }}" {% if current_category == cat.slug %}selected{% endif %}>{{ cat.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="plan-filter-field plan-filter-field--compact">
+                        <label for="plan_type" class="form-label small">Plan type</label>
+                        <select class="form-select plan-input-compact" id="plan_type" name="plan_type">
+                            <option value="">Any</option>
+                            {% for value, label in plan_type_choices %}
+                                <option value="{{ value }}" {% if current_plan_type == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="plan-filter-field plan-filter-field--compact">
+                        <label for="floors" class="form-label small">Floors</label>
+                        <input type="number" min="1" class="form-control plan-input-compact" id="floors" name="floors" placeholder="Any" value="{{ current_floors }}">
+                    </div>
+                </div>
+            </details>
+
+            <details class="plan-filter-advanced plan-filter-level--collapsible" data-filter-advanced data-filter-collapsible data-filter-level="4">
+                <summary>
+                    <div class="plan-filter-level__header mb-0">
+                        <div class="plan-filter-level__tag">Level 4</div>
+                        <div>
+                            <h3 class="plan-filter-level__title mb-1">Technical packs &amp; files</h3>
+                            <p class="plan-filter-level__subtitle mb-0">Collapse stays by default to keep pros focused without overwhelming homeowners.</p>
+                        </div>
+                    </div>
+                </summary>
+                <div class="plan-filter-technical" role="group" aria-label="Technical packs and file filters">
+                    <div class="plan-filter-technical__group">
+                        <span class="plan-filter-technical__label">Available packs</span>
+                        <div class="plan-filter-technical__options">
+                            <label class="plan-filter-chip plan-filter-chip--micro">
+                                <input type="checkbox" name="pack_levels" value="free">
+                                <span>Free preview</span>
+                            </label>
+                            <label class="plan-filter-chip plan-filter-chip--micro">
+                                <input type="checkbox" name="pack_levels" value="standard">
+                                <span>Standard build set</span>
+                            </label>
+                            <label class="plan-filter-chip plan-filter-chip--micro">
+                                <input type="checkbox" name="pack_levels" value="pro">
+                                <span>Pro BIM pack</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="plan-filter-technical__group">
+                        <span class="plan-filter-technical__label">Available files</span>
+                        <div class="plan-filter-technical__options">
+                            <label class="plan-filter-chip plan-filter-chip--micro">
+                                <input type="checkbox" name="file_types" value="pdf">
+                                <span>PDF</span>
+                            </label>
+                            <label class="plan-filter-chip plan-filter-chip--micro">
+                                <input type="checkbox" name="file_types" value="revit">
+                                <span>Revit</span>
+                            </label>
+                            <label class="plan-filter-chip plan-filter-chip--micro">
+                                <input type="checkbox" name="file_types" value="ifc">
+                                <span>IFC</span>
+                            </label>
+                            <label class="plan-filter-chip plan-filter-chip--micro">
+                                <input type="checkbox" name="file_types" value="dwg">
+                                <span>DWG/DXF</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="plan-filter-technical__group">
+                    </div>
+                </div>
+            </details>
+
+                <div class="plan-filter-actions">
+                    <div class="plan-filter-actions__primary">
+                        <button type="submit" class="btn btn-primary w-100 plan-btn-slim">Show matching plans</button>
+                    </div>
+                    <div class="plan-filter-actions__secondary">
+                        {% if has_active_filters %}
+                            <a href="{% url 'plans:list' %}" class="btn btn-outline-secondary w-100 plan-btn-slim">Reset filters</a>
+                        {% else %}
+                            <span class="btn btn-outline-secondary w-100 disabled plan-btn-slim" aria-disabled="true">Reset filters</span>
+                        {% endif %}
+                    </div>
+                <div class="plan-filter-actions__meta" aria-live="polite" data-plan-results-count data-plan-results-base="{{ displayed_plans_count|default:plans|length }}" data-plan-results-total="{{ total_visible_plans|default:displayed_plans_count }}">
+                    Showing {{ displayed_plans_count|default:plans|length }} plans now
+                </div>
+            </div>
+        </form>
+
+        {% if active_filters %}
+        <div class="d-flex flex-wrap gap-2 align-items-center mt-3">
+            {% for label in active_filters %}
+                <span class="badge rounded-pill bg-light text-muted border" style="font-weight: 500;">{{ label }}</span>
+            {% endfor %}
+            <a href="{% url 'plans:list' %}" class="btn btn-outline-secondary btn-sm">Clear everything</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Featured Plans (if on first page with no filters) -->
+{% if featured_plans and not has_active_filters and page_obj.number == 1 %}
+<section class="py-4 bg-light">
+    <div class="container">
+        <h2 class="h5 mb-3">Featured Plans</h2>
+        <div class="row g-3">
+            {% for plan in featured_plans %}
+            <div class="col-md-4">
+                {% include 'plans/_plan_card.html' with plan=plan show_ctas=False %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Plans Grid -->
+<section class="py-4">
+    <div class="container">
+        {% if plans %}
+            <div class="plans-catalog-grid" data-plans-grid>
+                {% for plan in plans %}
+                <div class="plans-catalog-grid__item">
+                    {% include 'plans/_plan_card.html' with plan=plan show_ctas=False %}
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if is_paginated %}
+            <nav aria-label="Plan pagination" class="mt-5">
+                <ul class="pagination justify-content-center">
+                    {% with query=filters_querystring %}
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1{% if query %}&{{ query }}{% endif %}">First</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query %}&{{ query }}{% endif %}">Previous</a>
+                        </li>
+                    {% endif %}
+                    
+                    <li class="page-item active">
+                        <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    </li>
+                    
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query %}&{{ query }}{% endif %}">Next</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if query %}&{{ query }}{% endif %}">Last</a>
+                        </li>
+                    {% endif %}
+                    {% endwith %}
+                </ul>
+            </nav>
+            {% endif %}
+
+        {% else %}
+            <div class="text-center py-4">
+                <p class="lead text-muted">No plans fit those criteria. Remove a filter to see the full catalog again.</p>
+                <a href="{% url 'plans:list' %}" class="btn btn-primary">Show entire catalog</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

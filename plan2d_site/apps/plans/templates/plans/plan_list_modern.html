@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Browse Free House Plans | {{ brand_domain }}{% endblock %}
+
+{% block meta_description %}Browse free house plan previews on {{ brand_domain }}. Filter by bedrooms, area, and style, then upgrade when you're ready to build with full dimensions.{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section style="background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%); padding: var(--space-12) 0;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="mb-3">Browse House Plans</h1>
+                <p class="text-muted mb-0" style="font-size: var(--text-lg);">Professional plans designed with Autodesk Revit by expert engineers</p>
+            </div>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <div class="badge badge-primary" style="font-size: var(--text-base); padding: var(--space-3) var(--space-4);">
+                    <i class="bi bi-grid-3x2"></i> {{ page_obj.paginator.count }} Plans Available
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Filters -->
+<section style="background-color: var(--color-surface); padding: var(--space-6) 0; box-shadow: var(--shadow-sm);">
+    <div class="container">
+        <form method="get" class="row g-3 align-items-end">
+            <!-- Search -->
+            <div class="col-md-4">
+                <label for="search" class="form-label">Search Plans</label>
+                <input type="text" class="form-control" id="search" name="q" placeholder="Search by name or reference..." value="{{ current_search }}">
+            </div>
+            
+            <!-- Category Filter -->
+            <div class="col-md-3">
+                <label for="category" class="form-label">Category</label>
+                <select class="form-control" id="category" name="category">
+                    <option value="">All Categories</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat.slug }}" {% if current_category == cat.slug %}selected{% endif %}>
+                            {{ cat.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Bedrooms Filter -->
+            <div class="col-md-2">
+                <label for="bedrooms" class="form-label">Bedrooms</label>
+                <select class="form-control" id="bedrooms" name="bedrooms">
+                    <option value="">Any</option>
+                    {% for i in "12345678" %}
+                        <option value="{{ i }}" {% if current_bedrooms == i %}selected{% endif %}>{{ i }}{% if i == "8" %}+{% endif %}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Submit -->
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-funnel"></i> Apply Filters
+                </button>
+                {% if current_search or current_category or current_bedrooms %}
+                    <a href="{% url 'plans:list' %}" class="btn btn-outline btn-sm w-100 mt-2">
+                        <i class="bi bi-x-circle"></i> Clear All
+                    </a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Featured Plans (if on first page with no filters) -->
+{% if featured_plans and not current_search and not current_category and page_obj.number == 1 %}
+<section class="section-sm" style="background-color: var(--color-gray-50);">
+    <div class="container">
+        <div class="d-flex align-items-center mb-4">
+            <i class="bi bi-star-fill text-warning me-2" style="font-size: 1.5rem;"></i>
+            <h3 class="mb-0">Featured Plans</h3>
+        </div>
+        <div class="grid grid-cols-3">
+            {% for plan in featured_plans %}
+            <div class="plan-card" style="border: 2px solid var(--color-accent);">
+                {% if plan.get_primary_image %}
+                    <img src="{{ plan.get_primary_image.image.url }}" alt="{{ plan.title }}" class="plan-card-image">
+                {% else %}
+                    <div style="width: 100%; height: 250px; background: var(--color-gray-100); display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-house" style="font-size: 4rem; color: var(--color-gray-400);"></i>
+                    </div>
+                {% endif %}
+                
+                <div class="plan-card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div class="plan-card-ref">{{ plan.reference }}</div>
+                        <span class="badge badge-accent"><i class="bi bi-star-fill"></i> Featured</span>
+                    </div>
+                    <h3 class="plan-card-title">{{ plan.title }}</h3>
+                    <p class="text-muted small mb-3">{{ plan.category.name }}</p>
+                    
+                    <div class="plan-card-specs">
+                        <span class="plan-spec">
+                            <i class="bi bi-door-closed plan-spec-icon"></i> {{ plan.bedrooms }} Beds
+                        </span>
+                        <span class="plan-spec">
+                            <i class="bi bi-droplet plan-spec-icon"></i> {{ plan.bathrooms }} Baths
+                        </span>
+                        <span class="plan-spec">
+                            <i class="bi bi-arrows-angle-expand plan-spec-icon"></i> {{ plan.total_area_sqm }} m²
+                        </span>
+                    </div>
+                    
+                    <div class="plan-card-footer">
+                        <span class="plan-price">${{ plan.price }}</span>
+                        <a href="{% url 'plans:detail' plan.slug %}" class="btn btn-sm btn-primary">View Plan</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Plans Grid -->
+<section class="section">
+    <div class="container">
+        {% if plans %}
+            <div class="grid grid-cols-3">
+                {% for plan in plans %}
+                <div class="plan-card">
+                    {% if plan.get_primary_image %}
+                        <img src="{{ plan.get_primary_image.image.url }}" alt="{{ plan.title }}" class="plan-card-image">
+                    {% else %}
+                        <div style="width: 100%; height: 250px; background: var(--color-gray-100); display: flex; align-items: center; justify-content: center; border-radius: var(--radius-xl) var(--radius-xl) 0 0;">
+                            <i class="bi bi-house" style="font-size: 4rem; color: var(--color-gray-400);"></i>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="plan-card-body">
+                        <div class="plan-card-ref">{{ plan.reference }}</div>
+                        <h3 class="plan-card-title">{{ plan.title }}</h3>
+                        <p class="text-muted small mb-3">{{ plan.category.name }}</p>
+                        
+                        <div class="plan-card-specs">
+                            <span class="plan-spec">
+                                <i class="bi bi-door-closed plan-spec-icon"></i> {{ plan.bedrooms }}
+                            </span>
+                            <span class="plan-spec">
+                                <i class="bi bi-droplet plan-spec-icon"></i> {{ plan.bathrooms }}
+                            </span>
+                            <span class="plan-spec">
+                                <i class="bi bi-arrows-angle-expand plan-spec-icon"></i> {{ plan.total_area_sqm }}m²
+                            </span>
+                        </div>
+                        
+                        <p class="card-text text-muted" style="font-size: var(--text-sm); line-height: 1.5;">
+                            {{ plan.description|truncatewords:15 }}
+                        </p>
+                        
+                        <div class="plan-card-footer">
+                            {% if plan.price > 0 %}
+                                <span class="plan-price">${{ plan.price }}</span>
+                            {% else %}
+                                <span class="plan-price plan-price-free">FREE</span>
+                            {% endif %}
+                            <a href="{% url 'plans:detail' plan.slug %}" class="btn btn-sm btn-primary">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if is_paginated %}
+            <nav aria-label="Plan pagination" class="mt-5">
+                <ul class="pagination justify-content-center" style="gap: var(--space-2);">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="btn btn-outline" href="?page=1{% if current_search %}&q={{ current_search }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}{% if current_bedrooms %}&bedrooms={{ current_bedrooms }}{% endif %}">First</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="btn btn-outline" href="?page={{ page_obj.previous_page_number }}{% if current_search %}&q={{ current_search }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}{% if current_bedrooms %}&bedrooms={{ current_bedrooms }}{% endif %}">
+                                <i class="bi bi-chevron-left"></i> Previous
+                            </a>
+                        </li>
+                    {% endif %}
+                    
+                    <li class="page-item">
+                        <span class="btn btn-primary" style="pointer-events: none;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    </li>
+                    
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="btn btn-outline" href="?page={{ page_obj.next_page_number }}{% if current_search %}&q={{ current_search }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}{% if current_bedrooms %}&bedrooms={{ current_bedrooms }}{% endif %}">
+                                Next <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="btn btn-outline" href="?page={{ page_obj.paginator.num_pages }}{% if current_search %}&q={{ current_search }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}{% if current_bedrooms %}&bedrooms={{ current_bedrooms }}{% endif %}">Last</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+            
+        {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-search" style="font-size: 5rem; color: var(--color-gray-300);"></i>
+                <h3 class="mt-4 mb-3">No plans found</h3>
+                <p class="text-muted mb-4">Try adjusting your filters or search terms</p>
+                <a href="{% url 'plans:list' %}" class="btn btn-primary">
+                    <i class="bi bi-grid-3x2"></i> View All Plans
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Info Section -->
+<section class="section-sm" style="background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); color: white;">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4 mb-4 mb-md-0">
+                <i class="bi bi-file-earmark-text" style="font-size: 3rem; opacity: 0.9;"></i>
+                <h5 class="mt-3 text-white">Free Preview Plans</h5>
+                <p style="opacity: 0.9;">View layout and design before purchasing full dimensions</p>
+            </div>
+            <div class="col-md-4 mb-4 mb-md-0">
+                <i class="bi bi-download" style="font-size: 3rem; opacity: 0.9;"></i>
+                <h5 class="mt-3 text-white">Instant Download</h5>
+                <p style="opacity: 0.9;">Get your CAD files immediately after payment verification</p>
+            </div>
+            <div class="col-md-4">
+                <i class="bi bi-tools" style="font-size: 3rem; opacity: 0.9;"></i>
+                <h5 class="mt-3 text-white">Professional Quality</h5>
+                <p style="opacity: 0.9;">All plans designed using industry-standard Autodesk Revit</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

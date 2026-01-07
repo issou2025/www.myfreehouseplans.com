@@ -1,0 +1,80 @@
+version: "1.0"
+task: >
+  Moderniser l'apparence visuelle du site pour un rendu moderne et élégant
+  sans modifier aucune structure HTML (pas de changement d'IDs, classes, balises).
+constraints:
+  - "Ne modifier que le CSS (ou ajouter un fichier CSS)."
+  - "Aucun changement du DOM, du HTML ou des attributs existants."
+  - "Maintenir l'accessibilité (contrastes, focus visible, taille lisible)."
+  - "Support desktop et mobile (responsive)."
+design_goals:
+  - "Esthétique minimaliste, espacements généreux, typographie nette."
+  - "Palette cohérente et contrastée, boutons clairs et accessibles."
+  - "Micro-interactions subtiles (transitions, ombres légères)."
+palette:
+  primary: "#0f62fe"        # bleu vif pour actions principales
+  secondary: "#0b5fff"
+  accent: "#ff7a59"         # accent chaud
+  background: "#f6f7fb"     # fond neutre doux
+  surface: "#ffffff"        # surfaces / cartes
+  text: "#0b1220"           # texte principal
+  muted: "#6b7280"          # texte secondaire
+typography:
+  base_font: "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial"
+  heading_weight: 600
+  body_weight: 400
+  scale:
+    - small: 0.875rem
+    - base: 1rem
+    - lg: 1.125rem
+    - xl: 1.25rem
+    - 2xl: 1.5rem
+spacing:
+  base_unit: 8px
+  scale: [8,16,24,32,40,56]
+surfaces:
+  border_radius: 12px
+  card_padding: 20px
+  shadow: "0 6px 18px rgba(11,17,32,0.06)"
+buttons:
+  shape: "rounded-pill"
+  padding: "10px 18px"
+  primary:
+    bg: primary
+    color: "#ffffff"
+    hover: "slightly darker, translateY(-2px), box-shadow"
+  outline:
+    border: "1px solid rgba(11,17,32,0.08)"
+    bg: "transparent"
+forms:
+  input:
+    bg: "#ffffff"
+    border: "1px solid rgba(11,17,32,0.08)"
+    focus: "0 0 0 4px rgba(15,98,254,0.08)"
+transitions:
+  duration_short: "180ms"
+  duration_medium: "280ms"
+  easing: "cubic-bezier(.2,.9,.3,1)"
+responsive:
+  breakpoints:
+    sm: 640px
+    md: 768px
+    lg: 1024px
+    xl: 1280px
+accessibility:
+  min_contrast_ratio: 4.5
+  focus_outline: true
+  prefers_reduced_motion: respect true
+deliverables:
+  - "Un fichier CSS (variables : :root) qui respecte les constraints."
+  - "Styles globaux (reset léger), typographie, palette, utilitaires d'espacement."
+  - "Composants stylés via sélecteurs existants (header, nav, buttons, cards, forms)."
+  - "Instructions d'intégration courtes : ajouter ou remplacer le fichier CSS sans toucher au HTML."
+notes_for_generator:
+  - "Ne toucher qu'au CSS. Tout changement provoquant modification d'attributs HTML est interdit."
+  - "Fournir exemples CSS pour header, nav, boutons, cartes, formulaires et media queries."
+  - "Inclure variables CSS pour faciliter ajustements ultérieurs."
+output_format:
+  type: "single_css_file"
+  name_suggestion: "modern-theme.css"
+  extras: "fichier README court expliquant où placer le CSS et comment revenir en arrière"

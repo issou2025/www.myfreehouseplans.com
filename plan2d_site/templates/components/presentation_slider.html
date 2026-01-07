@@ -1,0 +1,240 @@
+{% load static %}
+{% comment %}
+Presentation Slider Component
+Displays rotating images with smooth transitions.
+Only shows active, non-deleted slides in admin-defined order.
+{% endcomment %}
+
+{% if slider_images %}
+<section class="presentation-slider" style="position: relative; overflow: hidden; background: #1a1a1a;">
+    <div class="slider-container" style="position: relative; height: 400px;">
+        {% for slide in slider_images %}
+        <div class="slide {% if forloop.first %}active{% endif %}" 
+             data-slide-id="{{ slide.id }}"
+             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: {% if forloop.first %}1{% else %}0{% endif %}; transition: opacity 0.8s ease-in-out;">
+            
+            {% if slide.link_url %}
+            <a href="{{ slide.link_url }}" style="display: block; width: 100%; height: 100%; position: relative;">
+            {% else %}
+            <div style="position: relative; width: 100%; height: 100%;">
+            {% endif %}
+                
+                <img src="{{ slide.image.url }}" 
+                     alt="{{ slide.title|default:'Presentation Slide' }}"
+                     loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                     style="width: 100%; height: 100%; object-fit: cover;">
+                
+                {% if slide.title or slide.short_description %}
+                <div class="slide-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%); padding: 40px 20px 20px; color: white;">
+                    <div class="container">
+                        {% if slide.title %}
+                        <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                            {{ slide.title }}
+                        </h2>
+                        {% endif %}
+                        {% if slide.short_description %}
+                        <p style="font-size: 1.1rem; margin: 0; opacity: 0.95; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">
+                            {{ slide.short_description }}
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            
+            {% if slide.link_url %}
+            </a>
+            {% else %}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% if slider_images|length > 1 %}
+    <!-- Navigation Controls -->
+    <button class="slider-prev" onclick="changeSlide(-1)" 
+            style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.9); border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.2); z-index: 10; transition: all 0.3s;"
+            aria-label="Previous slide">
+        ‹
+    </button>
+    <button class="slider-next" onclick="changeSlide(1)" 
+            style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.9); border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.2); z-index: 10; transition: all 0.3s;"
+            aria-label="Next slide">
+        ›
+    </button>
+    
+    <!-- Slide Indicators -->
+    <div class="slider-indicators" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 10;">
+        {% for slide in slider_images %}
+        <button class="indicator {% if forloop.first %}active{% endif %}" 
+                onclick="goToSlide({{ forloop.counter0 }})"
+                style="width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; background: {% if forloop.first %}white{% else %}transparent{% endif %}; cursor: pointer; transition: all 0.3s;"
+                aria-label="Go to slide {{ forloop.counter }}">
+        </button>
+        {% endfor %}
+    </div>
+    {% endif %}
+</section>
+
+<script>
+(function() {
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const indicators = document.querySelectorAll('.slider-indicators .indicator');
+    const totalSlides = slides.length;
+    let autoPlayInterval;
+    let isPaused = false;
+    
+    if (totalSlides <= 1) return; // No need for slider with 1 or 0 slides
+    
+    function showSlide(index) {
+        // Wrap around
+        if (index >= totalSlides) index = 0;
+        if (index < 0) index = totalSlides - 1;
+        
+        // Hide all slides
+        slides.forEach(slide => {
+            slide.style.opacity = '0';
+            slide.classList.remove('active');
+        });
+        
+        // Update indicators
+        indicators.forEach(ind => {
+            ind.style.background = 'transparent';
+            ind.classList.remove('active');
+        });
+        
+        // Show current slide
+        slides[index].style.opacity = '1';
+        slides[index].classList.add('active');
+        indicators[index].style.background = 'white';
+        indicators[index].classList.add('active');
+        
+        currentSlide = index;
+    }
+    
+    window.changeSlide = function(direction) {
+        showSlide(currentSlide + direction);
+        resetAutoPlay();
+    };
+    
+    window.goToSlide = function(index) {
+        showSlide(index);
+        resetAutoPlay();
+    };
+    
+    function startAutoPlay() {
+        autoPlayInterval = setInterval(() => {
+            if (!isPaused) {
+                showSlide(currentSlide + 1);
+            }
+        }, 5000); // Change slide every 5 seconds
+    }
+    
+    function resetAutoPlay() {
+        clearInterval(autoPlayInterval);
+        startAutoPlay();
+    }
+    
+    // Pause on hover (desktop)
+    const sliderContainer = document.querySelector('.slider-container');
+    sliderContainer.addEventListener('mouseenter', () => {
+        isPaused = true;
+    });
+    sliderContainer.addEventListener('mouseleave', () => {
+        isPaused = false;
+    });
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') {
+            changeSlide(-1);
+        } else if (e.key === 'ArrowRight') {
+            changeSlide(1);
+        }
+    });
+    
+    // Touch swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    sliderContainer.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    
+    sliderContainer.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, { passive: true });
+    
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = touchStartX - touchEndX;
+        
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                // Swipe left - next slide
+                changeSlide(1);
+            } else {
+                // Swipe right - previous slide
+                changeSlide(-1);
+            }
+        }
+    }
+    
+    // Start autoplay
+    startAutoPlay();
+})();
+</script>
+
+<style>
+.slider-prev,
+.slider-next {
+    transition: background-color 180ms ease, transform 200ms ease;
+}
+
+.slider-prev:hover,
+.slider-next:hover,
+.slider-prev:focus-visible,
+.slider-next:focus-visible {
+    background: #ffffff !important;
+    transform: translateY(-50%) scale(1.04);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.35);
+}
+
+@media (max-width: 768px) {
+    .presentation-slider .slider-container {
+        height: 300px !important;
+    }
+    
+    .presentation-slider .slide-overlay h2 {
+        font-size: 1.5rem !important;
+    }
+    
+    .presentation-slider .slide-overlay p {
+        font-size: 0.95rem !important;
+    }
+    
+    .slider-prev, .slider-next {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 1.2rem !important;
+    }
+    
+    .slider-prev {
+        left: 10px !important;
+    }
+    
+    .slider-next {
+        right: 10px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .presentation-slider .slider-container {
+        height: 250px !important;
+    }
+}
+</style>
+{% endif %}

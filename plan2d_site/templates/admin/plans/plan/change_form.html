@@ -1,0 +1,107 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <style>
+        .plan-submit-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+            border-top: 1px solid #dfe3eb;
+            margin-top: 1rem;
+            padding-top: 1rem;
+        }
+        .plan-submit-row .plan-btn {
+            min-width: 140px;
+            text-transform: none;
+            font-weight: 600;
+            border-radius: 6px;
+            padding: 0.65rem 1.5rem;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.15s ease;
+        }
+        .plan-submit-row .plan-btn:hover {
+            opacity: 0.9;
+        }
+        .plan-btn--save {
+            background: #111827;
+            color: #fff;
+        }
+        .plan-btn--publish {
+            background: #15803d;
+            color: #fff;
+        }
+        .plan-btn--draft {
+            background: #4b5563;
+            color: #fff;
+        }
+        .plan-btn--cancel {
+            background: #fff;
+            color: #111827;
+            border: 1px solid #d1d5db;
+        }
+        .plan-danger-zone {
+            border: 1px solid #f59e0b;
+            background: #fffbeb;
+            padding: 1.25rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+        }
+        .plan-danger-zone h3 {
+            margin-top: 0;
+            color: #92400e;
+            font-size: 1rem;
+        }
+        .plan-danger-zone__actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .plan-danger-zone__button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            color: #fff;
+            background: #991b1b;
+            border: 1px solid #7f1d1d;
+        }
+        .plan-danger-zone__button:hover {
+            opacity: 0.9;
+        }
+    </style>
+{% endblock %}
+
+{% block submit_buttons_top %}
+    {{ block.super }}
+    {% include "admin/plans/plan/submit_row.html" %}
+{% endblock %}
+
+{% block submit_buttons_bottom %}
+    {{ block.super }}
+    {% include "admin/plans/plan/submit_row.html" %}
+{% endblock %}
+
+{% block after_related_objects %}
+    {{ block.super }}
+    {% if can_permanent_delete and permanent_delete_url %}
+        <section class="plan-danger-zone">
+            <h3>{% trans "Danger zone: permanent deletion" %}</h3>
+            <p>
+                {% trans "This plan is currently soft deleted. Permanently deleting it will remove all files, metadata, and history. This cannot be undone." %}
+            </p>
+            <div class="plan-danger-zone__actions">
+                <a href="{{ permanent_delete_url }}" class="plan-danger-zone__button">
+                    {% blocktrans with ref=plan_reference_value %}Delete permanently ({{ ref }}){% endblocktrans %}
+                </a>
+            </div>
+        </section>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,389 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Free House Plans & Professional DWG, Revit, IFC Downloads{% endblock %}
+
+{% block meta_description %}Download free house plans and access premium DWG, Revit, and IFC files. Metric and Imperial included. Perfect for builders, engineers, and designers worldwide.{% endblock %}
+
+{% block og_title %}Free House Plans & Professional DWG, Revit, IFC Downloads{% endblock %}
+{% block twitter_title %}Free House Plans & Professional DWG, Revit, IFC Downloads{% endblock %}
+
+{% block og_description %}Download free house plans and access premium DWG, Revit, and IFC files. Metric and Imperial included. Perfect for builders, engineers, and designers worldwide.{% endblock %}
+{% block twitter_description %}Download free house plans and access premium DWG, Revit, and IFC files. Metric and Imperial included. Perfect for builders, engineers, and designers worldwide.{% endblock %}
+
+{% block meta_keywords %}free house plans, architectural plans, DWG house plans, Revit house plans, IFC building models, metric and imperial plans{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@graph": [
+        {
+            "@type": "Organization",
+            "name": "{{ brand_name|escapejs }}",
+            "url": "{{ site_base_url }}"
+        },
+        {
+            "@type": "WebSite",
+            "name": "{{ brand_name|escapejs }}",
+            "url": "{{ site_base_url }}"
+        }
+    ]
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="homepage">
+<!-- Presentation Slider -->
+{% include 'components/presentation_slider.html' %}
+
+<!-- Hero Section -->
+<section class="hero premium-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <h1 class="hero-title premium-hero-title fade-in">
+                    Free &amp; Professional House Plans for Global Use
+                </h1>
+                <p class="hero-subtitle premium-hero-subtitle fade-in">
+                    Download free plans or access complete DWG, Revit, and IFC files in both Metric and Imperial standards.
+                </p>
+                <div class="hero-cta premium-hero-actions fade-in">
+                    <a href="{% url 'plans:list' %}" class="btn btn-primary premium-btn-primary btn-lg">
+                        <i class="bi bi-grid-3x2"></i> Browse House Plans
+                    </a>
+                    <a href="#packs" class="btn btn-outline premium-btn-secondary btn-lg">
+                        <i class="bi bi-box-seam"></i> View Packs
+                    </a>
+                </div>
+                <p class="premium-text-secondary mt-3 mb-0">
+                    <i class="bi bi-chat-dots"></i>
+                    <a href="{% url 'core:contact' %}" class="text-decoration-none">{% trans "Have questions? Contact our team." %}</a>
+                </p>
+                <div class="mt-4 d-flex gap-3 flex-wrap">
+                    <span class="badge premium-badge premium-badge-primary"><i class="bi bi-check-circle"></i> Human-made plans</span>
+                    <span class="badge premium-badge"><i class="bi bi-check-circle"></i> International standards</span>
+                    <span class="badge premium-badge premium-badge-accent"><i class="bi bi-check-circle"></i> Trusted by professionals</span>
+                </div>
+                <div class="homepage-trust-strip mt-4">
+                    <div class="homepage-trust-strip__item">
+                        <i class="bi bi-shield-check"></i>
+                        <span>Secure downloads</span>
+                    </div>
+                    <div class="homepage-trust-strip__divider" aria-hidden="true"></div>
+                    <div class="homepage-trust-strip__item">
+                        <i class="bi bi-globe2"></i>
+                        <span>Metric + Imperial included</span>
+                    </div>
+                    <div class="homepage-trust-strip__divider" aria-hidden="true"></div>
+                    <div class="homepage-trust-strip__item">
+                        <i class="bi bi-award"></i>
+                        <span>CAD-quality drawings</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 mt-5 mt-lg-0">
+                <div class="card premium-card shadow-lg homepage-hero-card">
+                    <div class="card-body premium-card-content text-center p-5">
+                        <i class="bi bi-rulers" style="font-size: 4rem; color: var(--premium-primary);"></i>
+                        <h4 class="premium-card-title mt-4 mb-3">Built for real projects</h4>
+                        <p class="premium-card-text premium-text-secondary">
+                            Preview the free layout, then upgrade to dimensioned PDFs or professional BIM deliverables when you're ready.
+                        </p>
+                        <div class="mt-4 d-flex justify-content-around gap-3 flex-wrap">
+                            <div>
+                                <div class="h3 mb-0" style="color: var(--premium-primary);">PDF</div>
+                                <small class="premium-text-tertiary">Free preview</small>
+                            </div>
+                            <div>
+                                <div class="h3 mb-0" style="color: var(--premium-accent);">ZIP</div>
+                                <small class="premium-text-tertiary">Instant delivery</small>
+                            </div>
+                            <div>
+                                <div class="h3 mb-0" style="color: var(--premium-primary);">BIM</div>
+                                <small class="premium-text-tertiary">RVT · IFC · DWG</small>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <a href="{% url 'core:faq' %}" class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-question-circle"></i> How downloads work
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="section premium-section">
+    <div class="container">
+        <div class="premium-section-header text-center mb-5">
+            <h2 class="premium-section-title mb-3">How It Works</h2>
+                <p class="premium-section-subtitle premium-text-secondary" style="max-width: 600px; margin: 0 auto;">
+                    Preview now, upgrade only when the project is moving forward
+            </p>
+            <div class="mt-3">
+                <a href="{% url 'core:faq' %}" class="btn btn-link premium-text-secondary">
+                    <i class="bi bi-question-circle"></i> {% trans "See detailed step-by-step guide" %}
+                </a>
+            </div>
+        </div>
+        
+        <div class="feature-grid premium-grid premium-grid-3">
+            <div class="feature-item premium-card h-100">
+                <div class="feature-icon">
+                    <i class="bi bi-search"></i>
+                </div>
+                <h3 class="feature-title premium-h4">1. Browse plans</h3>
+                <p class="feature-description premium-text premium-text-secondary">
+                    Look through the collection just as you would leaf through a studio binder. Use the filters only if you need them.
+                </p>
+            </div>
+            
+            <div class="feature-item premium-card h-100">
+                <div class="feature-icon feature-icon--accent">
+                    <i class="bi bi-download"></i>
+                </div>
+                <h3 class="feature-title premium-h4">2. Download a preview</h3>
+                <p class="feature-description premium-text premium-text-secondary">
+                    Grab the free PDF without dimensions to study the flow with your team or family.
+                </p>
+            </div>
+            
+            <div class="feature-item premium-card h-100">
+                <div class="feature-icon feature-icon--primary">
+                    <i class="bi bi-hammer"></i>
+                </div>
+                <h3 class="feature-title premium-h4">3. Upgrade when it’s real</h3>
+                <p class="feature-description premium-text premium-text-secondary">
+                    When the project is confirmed, download the dimensioned, build-ready set straight away.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Packs Section -->
+<section id="packs" class="section premium-section">
+    <div class="container">
+        <div class="premium-section-header text-center mb-5">
+            <h2 class="premium-section-title mb-3">Packs</h2>
+            <p class="premium-section-subtitle premium-text-secondary" style="max-width: 720px; margin: 0 auto;">
+                Choose the level you need today. Every ZIP pack includes both Metric and Imperial deliverables.
+            </p>
+        </div>
+
+        <div class="premium-grid premium-grid-3">
+            <div class="premium-card homepage-pack-card h-100">
+                <div class="premium-card-content d-flex flex-column h-100">
+                    <div class="homepage-pack-card__header">
+                        <div class="homepage-pack-card__badge">Pack 1</div>
+                        <h3 class="premium-h4 mb-2">Free Preview</h3>
+                        <p class="premium-text-secondary mb-0">Explore the layout and circulation before you commit.</p>
+                    </div>
+
+                    <ul class="homepage-pack-card__features">
+                        <li><i class="bi bi-check-circle"></i> Free PDF preview (no dimensions)</li>
+                        <li><i class="bi bi-check-circle"></i> Quick download</li>
+                        <li><i class="bi bi-check-circle"></i> Great for early planning</li>
+                    </ul>
+
+                    <div class="homepage-pack-card__price">
+                        <div class="homepage-pack-card__price-main">$0</div>
+                        <div class="homepage-pack-card__price-sub">Always free</div>
+                    </div>
+
+                    <div class="mt-auto">
+                        <a href="{% url 'plans:list' %}" class="btn btn-outline-secondary w-100">
+                            Browse plans
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="premium-card homepage-pack-card h-100 homepage-pack-card--featured">
+                <div class="premium-card-content d-flex flex-column h-100">
+                    <div class="homepage-pack-card__header">
+                        <div class="homepage-pack-card__badge">Pack 2</div>
+                        <h3 class="premium-h4 mb-2">Standard (Dimensioned PDF ZIP)</h3>
+                        <p class="premium-text-secondary mb-0">Construction-ready dimensions when the project is approved.</p>
+                    </div>
+
+                    <ul class="homepage-pack-card__features">
+                        <li><i class="bi bi-check-circle"></i> Dimensioned PDF set</li>
+                        <li><i class="bi bi-check-circle"></i> Metric + Imperial included</li>
+                        <li><i class="bi bi-check-circle"></i> Instant ZIP delivery via Gumroad</li>
+                    </ul>
+
+                    <div class="homepage-pack-card__price">
+                        {% if pack2_min_price %}
+                            <div class="homepage-pack-card__price-main">From ${{ pack2_min_price|floatformat:0 }}</div>
+                            <div class="homepage-pack-card__price-sub">Price varies by plan</div>
+                        {% else %}
+                            <div class="homepage-pack-card__price-main">Priced per plan</div>
+                            <div class="homepage-pack-card__price-sub">See price on the plan page</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mt-auto">
+                        <a href="{% url 'plans:list' %}" class="btn btn-primary w-100">
+                            View Pack 2 plans
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="premium-card homepage-pack-card h-100">
+                <div class="premium-card-content d-flex flex-column h-100">
+                    <div class="homepage-pack-card__header">
+                        <div class="homepage-pack-card__badge">Pack 3</div>
+                        <h3 class="premium-h4 mb-2">Pro (BIM ZIP)</h3>
+                        <p class="premium-text-secondary mb-0">For professionals who need editable CAD/BIM files.</p>
+                    </div>
+
+                    <ul class="homepage-pack-card__features">
+                        <li><i class="bi bi-check-circle"></i> Revit (RVT) + IFC + DWG</li>
+                        <li><i class="bi bi-check-circle"></i> Metric + Imperial included</li>
+                        <li><i class="bi bi-check-circle"></i> Best for engineers &amp; builders</li>
+                    </ul>
+
+                    <div class="homepage-pack-card__price">
+                        {% if pack3_min_price %}
+                            <div class="homepage-pack-card__price-main">From ${{ pack3_min_price|floatformat:0 }}</div>
+                            <div class="homepage-pack-card__price-sub">Available on selected plans</div>
+                        {% else %}
+                            <div class="homepage-pack-card__price-main">Coming soon</div>
+                            <div class="homepage-pack-card__price-sub">Pack 3 appears once priced</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mt-auto">
+                        <a href="{% url 'plans:list' %}" class="btn btn-outline-secondary w-100">
+                            View Pro-ready plans
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Plans Section -->
+<section class="section premium-section featured-plans-section" style="background-color: var(--premium-surface-gray);">
+    <div class="container">
+        <div class="featured-plans-header">
+            <div>
+                <h2 class="premium-h2 mb-2">Featured House Plans</h2>
+                <p class="premium-text-secondary mb-0">Plans often requested by builders and homeowners</p>
+            </div>
+            <div class="featured-plans-header__cta">
+                <a href="{% url 'plans:list' %}" class="btn btn-primary premium-btn-primary">
+                    See catalog <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="featured-plans-grid">
+            {% if featured_plans %}
+                {% for plan in featured_plans %}
+                    <div class="featured-plans-grid__item">
+                        {% include 'plans/_plan_card.html' with plan=plan show_ctas=False %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="featured-plans-grid__empty">
+                    <p class="text-muted mb-0">No featured plans yet.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Why Different Section -->
+<section class="section premium-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h2 class="premium-h2 mb-4">Why Our Plans Are Different</h2>
+                <div class="mb-4">
+                    <div class="d-flex align-items-start mb-3">
+                        <div class="flex-shrink-0">
+                            <i class="bi bi-check-circle-fill text-success" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="premium-h5 mb-1">Professional CAD Design</h5>
+                            <p class="premium-text-secondary mb-0">Drawn in Autodesk Revit by engineers who understand site work</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start mb-3">
+                        <div class="flex-shrink-0">
+                            <i class="bi bi-check-circle-fill text-success" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="mb-1">Construction-Ready</h5>
+                            <p class="text-muted mb-0">Measurements are verified so a builder can move directly into pricing</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start mb-3">
+                        <div class="flex-shrink-0">
+                            <i class="bi bi-check-circle-fill text-success" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="mb-1">No AI Shortcuts</h5>
+                            <p class="text-muted mb-0">Nothing is generated or templated—every drawing is reviewed by hand</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start">
+                        <div class="flex-shrink-0">
+                            <i class="bi bi-check-circle-fill text-success" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="mb-1">Instant Access</h5>
+                            <p class="text-muted mb-0">Files are available the moment payment clears so work can continue</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card premium-card shadow-lg homepage-testimonial-card">
+                    <div class="card-body premium-card-content p-5 text-center">
+                        <i class="bi bi-award" style="font-size: 5rem; color: var(--premium-primary);"></i>
+                        <h3 class="premium-h3 mt-4 mb-3">Trusted by Builders</h3>
+                        <p class="premium-text-secondary mb-4">
+                            Homeowners, contractors, and small developers use these sets when they need something dependable fast.
+                        </p>
+                        <blockquote class="mb-0" style="border-left: 4px solid var(--premium-primary); padding-left: 1rem;">
+                            <p class="premium-text mb-2 fst-italic">"The dimensions lined up with our site conditions, so framing started without any revisions."</p>
+                            <footer class="premium-text-tertiary">— Builder, Niamey</footer>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section premium-section" style="background: linear-gradient(135deg, var(--premium-primary-dark) 0%, var(--premium-primary) 100%); color: white;">
+    <div class="container text-center">
+        <h2 class="premium-h2 text-white mb-4">Ready to Start Your Project?</h2>
+        <p class="premium-text-lg mb-5" style="max-width: 600px; margin: 0 auto; opacity: 0.9;">
+            Browse our collection of professional house plans and find the perfect design for your next build.
+        </p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="{% url 'plans:list' %}" class="btn premium-btn-lg" style="background-color: white; color: var(--premium-primary); font-weight: 600;">
+                <i class="bi bi-grid-3x2"></i> Browse All Plans
+            </a>
+            <a href="{% url 'core:contact' %}" class="btn btn-outline-light premium-btn-secondary premium-btn-lg" style="border-color: white; color: white;">
+                <i class="bi bi-envelope"></i> Contact Us
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+</div>

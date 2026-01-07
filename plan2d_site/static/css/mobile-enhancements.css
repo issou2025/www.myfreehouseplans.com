@@ -1,0 +1,885 @@
+# Mobile-First UX Optimization - Complete CSS Enhancement
+# Optimized for 320px-360px screens
+# Last Updated: January 3, 2026
+
+/* ===================================
+   MOBILE-FIRST CRITICAL ENHANCEMENTS
+   320px-360px Screen Optimization
+   =================================== */
+
+/* Ultra-small screen adjustments (320px-360px) */
+@media (max-width: 360px) {
+  :root {
+    /* Reduce spacing on ultra-small screens */
+    --space-4: 0.75rem; /* 12px instead of 16px */
+    --space-5: 1rem; /* 16px instead of 20px */
+    --space-6: 1.25rem; /* 20px instead of 24px */
+    --space-8: 1.5rem; /* 24px instead of 32px */
+    
+    /* Slightly smaller text for fit */
+    --text-xl: 1.125rem; /* 18px instead of 20px */
+    --text-2xl: 1.375rem; /* 22px instead of 24px */
+    --text-3xl: 1.625rem; /* 26px instead of 30px */
+  }
+  
+  /* Reduce container padding on very small screens */
+  .container,
+  .container-fluid {
+    padding: 0 var(--space-3); /* 12px instead of 16px */
+  }
+  
+  /* Tighter section spacing */
+  .section {
+    padding: var(--space-6) 0; /* 20px instead of 32px */
+  }
+  
+  /* Smaller hero title for 320px */
+  .hero-title {
+    font-size: 1.75rem !important; /* 28px */
+    line-height: 1.2;
+  }
+  
+  /* Compact navigation brand */
+  .navbar-brand {
+    font-size: var(--text-lg) !important; /* 18px */
+  }
+  
+  /* Smaller card padding */
+  .card,
+  .plan-dossier-card {
+    padding: var(--space-3);
+  }
+  
+  .plan-dossier-body {
+    padding: var(--space-4);
+  }
+  
+  /* Reduce plan preview height */
+  .plan-preview img {
+    max-height: 360px;
+    padding: var(--space-3) var(--space-2);
+  }
+}
+
+/* Ensure no horizontal overflow anywhere */
+* {
+  box-sizing: border-box;
+}
+
+body,
+html,
+.container,
+.container-fluid,
+.row,
+section {
+  max-width: 100%;
+  overflow-x: hidden !important;
+}
+
+/* Images: always responsive */
+img,
+video,
+iframe,
+picture {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Prevent text overflow */
+h1, h2, h3, h4, h5, h6,
+p, span, div, a {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Long words in forms */
+input,
+textarea,
+select {
+  max-width: 100%;
+  word-break: break-word;
+}
+
+/* ===================================
+   MOBILE NAVIGATION IMPROVEMENTS
+   =================================== */
+
+/* Ensure hamburger is always visible and thumb-friendly */
+.navbar-toggler {
+  border: 2px solid var(--color-gray-300);
+  padding: var(--space-3);
+  min-width: 48px !important;
+  min-height: 48px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.25);
+  border-color: var(--color-primary);
+}
+
+/* Mobile menu: full-width, easy-to-tap items */
+@media (max-width: 767px) {
+  .navbar-collapse {
+    background-color: var(--color-surface);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    border-radius: var(--radius-lg);
+    margin-top: var(--space-3);
+    padding: var(--space-2) 0;
+    border: 1px solid var(--color-gray-200);
+  }
+  
+  /* Large, full-width touch targets */
+  .nav-link {
+    display: flex !important;
+    align-items: center;
+    width: 100%;
+    min-height: 52px !important; /* Increased from 48px */
+    padding: var(--space-4) var(--space-5) !important;
+    font-size: 1rem !important; /* 16px minimum */
+    border-radius: var(--radius-md);
+    margin: var(--space-1) var(--space-2);
+    transition: all 0.2s ease;
+  }
+  
+  .nav-link.active,
+  .nav-link:active {
+    background-color: var(--color-primary);
+    color: white !important;
+    font-weight: 600;
+  }
+  
+  /* Language dropdown in mobile */
+  .dropdown-menu {
+    width: calc(100% - var(--space-4));
+    margin: var(--space-2);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .dropdown-item {
+    min-height: 48px;
+    padding: var(--space-3) var(--space-4);
+    font-size: 1rem;
+  }
+}
+
+/* ===================================
+   MOBILE BUTTON IMPROVEMENTS
+   =================================== */
+
+/* All buttons full-width on mobile for easy tapping */
+@media (max-width: 767px) {
+  .btn {
+    width: 100% !important;
+    min-height: 52px !important; /* Increased from 48px */
+    padding: var(--space-4) var(--space-5) !important;
+    font-size: 1rem !important; /* 16px to prevent iOS zoom */
+    font-weight: 600;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3); /* Space between stacked buttons */
+  }
+  
+  .btn:last-child {
+    margin-bottom: 0;
+  }
+  
+  /* Button sizing variants on mobile */
+  .btn-lg {
+    min-height: 56px !important;
+    padding: var(--space-5) var(--space-6) !important;
+    font-size: 1.125rem !important; /* 18px */
+  }
+  
+  .btn-sm {
+    min-height: 44px !important;
+    padding: var(--space-3) var(--space-4) !important;
+    font-size: 0.875rem !important; /* 14px */
+  }
+  
+  /* CTA groups: stack vertically */
+  .hero-cta,
+  .plan-dossier-ctas,
+  .btn-group {
+    display: flex;
+    flex-direction: column !important;
+    gap: var(--space-3) !important;
+    width: 100%;
+  }
+  
+  .hero-cta .btn {
+    width: 100%;
+  }
+}
+
+/* Remove hover transformations on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .btn:hover,
+  .card:hover,
+  .plan-dossier-card:hover {
+    transform: none !important;
+  }
+}
+
+/* ===================================
+   MOBILE FORM IMPROVEMENTS
+   =================================== */
+
+/* All form inputs: large, thumb-friendly */
+.form-control,
+input,
+textarea,
+select {
+  width: 100%;
+  min-height: 52px !important; /* Increased from 48px */
+  padding: var(--space-4) var(--space-4) !important;
+  font-size: 1rem !important; /* 16px prevents iOS zoom */
+  border: 2px solid var(--color-gray-300);
+  border-radius: var(--radius-lg);
+  transition: all 0.2s ease;
+  font-family: var(--font-body);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Textareas: comfortable height on mobile */
+textarea.form-control {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Form focus state: clear visual feedback */
+.form-control:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+}
+
+/* Form labels: large, readable */
+.form-label,
+label {
+  display: block;
+  font-weight: 600;
+  color: var(--color-gray-800);
+  margin-bottom: var(--space-2);
+  font-size: 1rem; /* 16px minimum */
+}
+
+/* Form groups: adequate spacing */
+.form-group,
+.mb-3 {
+  margin-bottom: var(--space-5) !important;
+}
+
+/* File upload: easy to tap */
+input[type="file"] {
+  padding: var(--space-4);
+  cursor: pointer;
+}
+
+input[type="file"]::file-selector-button {
+  padding: var(--space-3) var(--space-4);
+  border: none;
+  background-color: var(--color-primary);
+  color: white;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: var(--space-3);
+  min-height: 44px;
+}
+
+/* Checkboxes and radios: larger on mobile */
+input[type="checkbox"],
+input[type="radio"] {
+  width: 24px;
+  height: 24px;
+  min-height: 24px;
+  cursor: pointer;
+  margin-right: var(--space-2);
+}
+
+/* ===================================
+   MOBILE TYPOGRAPHY IMPROVEMENTS
+   =================================== */
+
+/* Ensure all text is readable on mobile */
+body {
+  font-size: 1rem; /* 16px minimum */
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings: responsive sizing */
+@media (max-width: 767px) {
+  h1, .h1 {
+    font-size: 2rem !important; /* 32px */
+    line-height: 1.2;
+    margin-bottom: var(--space-4);
+  }
+  
+  h2, .h2 {
+    font-size: 1.75rem !important; /* 28px */
+    line-height: 1.25;
+    margin-bottom: var(--space-3);
+  }
+  
+  h3, .h3 {
+    font-size: 1.5rem !important; /* 24px */
+    line-height: 1.3;
+    margin-bottom: var(--space-3);
+  }
+  
+  h4, .h4 {
+    font-size: 1.25rem !important; /* 20px */
+    line-height: 1.35;
+    margin-bottom: var(--space-2);
+  }
+  
+  h5, .h5 {
+    font-size: 1.125rem !important; /* 18px */
+    line-height: 1.4;
+    margin-bottom: var(--space-2);
+  }
+  
+  h6, .h6 {
+    font-size: 1rem !important; /* 16px */
+    line-height: 1.5;
+    margin-bottom: var(--space-2);
+  }
+  
+  /* Display headings */
+  .display-1 {
+    font-size: 2.5rem !important; /* 40px */
+  }
+  
+  .display-2 {
+    font-size: 2.25rem !important; /* 36px */
+  }
+  
+  .display-3 {
+    font-size: 2rem !important; /* 32px */
+  }
+  
+  .display-4 {
+    font-size: 1.875rem !important; /* 30px */
+  }
+}
+
+/* Paragraph spacing */
+p {
+  margin-bottom: var(--space-4);
+  line-height: 1.65;
+}
+
+/* ===================================
+   MOBILE HERO SECTION
+   =================================== */
+
+@media (max-width: 767px) {
+  .hero {
+    padding: var(--space-6) 0; /* Reduced from space-8 */
+  }
+  
+  .hero-title {
+    font-size: 2rem !important; /* 32px */
+    line-height: 1.2;
+    margin-bottom: var(--space-4);
+  }
+  
+  .hero-subtitle {
+    font-size: 1rem !important; /* 16px */
+    line-height: 1.6;
+    margin-bottom: var(--space-5);
+    max-width: 100%;
+  }
+  
+  /* Badges: wrap nicely on small screens */
+  .badge {
+    font-size: 0.75rem !important; /* 12px */
+    padding: var(--space-2) var(--space-3);
+    white-space: nowrap;
+  }
+  
+  /* Stats/numbers: maintain readability */
+  .h3 {
+    font-size: 1.5rem !important; /* 24px */
+  }
+}
+
+/* ===================================
+   MOBILE CARD IMPROVEMENTS
+   =================================== */
+
+@media (max-width: 767px) {
+  .card {
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-4);
+  }
+  
+  .card-body {
+    padding: var(--space-4);
+  }
+  
+  .card-header {
+    padding: var(--space-4);
+    font-size: 1.125rem; /* 18px */
+  }
+  
+  /* Feature cards: full-width on mobile */
+  .feature-item,
+  .feature-card {
+    margin-bottom: var(--space-4);
+  }
+  
+  .feature-icon {
+    width: 64px;
+    height: 64px;
+    font-size: 2rem;
+  }
+}
+
+/* ===================================
+   MOBILE PLAN CARDS
+   =================================== */
+
+@media (max-width: 767px) {
+  .plan-dossier-card {
+    margin-bottom: var(--space-4);
+  }
+  
+  .plan-dossier-thumb {
+    min-height: 200px; /* Reduced from 280px */
+    padding: var(--space-4) var(--space-3);
+  }
+  
+  .plan-dossier-thumb img {
+    max-height: 200px; /* Reduced from 280px */
+  }
+  
+  .plan-dossier-body {
+    padding: var(--space-4);
+    gap: var(--space-2);
+  }
+  
+  .plan-dossier-title {
+    font-size: 1.25rem !important; /* 20px */
+    line-height: 1.3;
+  }
+  
+  /* Plan specs: 2-column grid on mobile */
+  .plan-dossier-specs {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: var(--space-2);
+  }
+  
+  .plan-dossier-spec {
+    padding: var(--space-2);
+  }
+  
+  .plan-dossier-spec span {
+    font-size: 0.625rem; /* 10px */
+  }
+  
+  .plan-dossier-spec strong {
+    font-size: 1rem; /* 16px */
+  }
+}
+
+/* ===================================
+   MOBILE PLAN DETAIL PAGE
+   =================================== */
+
+@media (max-width: 767px) {
+  /* Plan preview image */
+  .plan-preview {
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-3);
+  }
+  
+  .plan-preview img {
+    max-height: 320px;
+    padding: var(--space-3) var(--space-2);
+  }
+  
+  /* Enable pinch-to-zoom on plan images */
+  .plan-preview img {
+    touch-action: pinch-zoom;
+  }
+  
+  /* Dossier sections */
+  .dossier-section {
+    margin-bottom: var(--space-3);
+    border-radius: var(--radius-md);
+  }
+  
+  .dossier-section__header {
+    padding: var(--space-3) var(--space-3);
+  }
+  
+  .dossier-section__title {
+    font-size: 1.25rem !important; /* 20px */
+  }
+  
+  .dossier-section__body {
+    padding: var(--space-3);
+  }
+  
+  /* Plan versions: single column */
+  .plan-versions {
+    grid-template-columns: 1fr !important;
+    gap: var(--space-3);
+  }
+  
+  .plan-version {
+    padding: var(--space-3);
+  }
+  
+  .plan-version h3 {
+    font-size: 1.375rem !important; /* 22px */
+    padding-right: 64px; /* Space for badge */
+  }
+  
+  .plan-version li {
+    font-size: 0.9375rem; /* 15px */
+    margin: var(--space-1) 0;
+  }
+}
+
+/* ===================================
+   MOBILE FOOTER
+   =================================== */
+
+@media (max-width: 767px) {
+  .footer {
+    padding: var(--space-8) 0 var(--space-6) 0;
+  }
+  
+  .footer-logo img {
+    max-height: 40px;
+    margin-bottom: var(--space-3);
+  }
+  
+  .footer h5 {
+    font-size: 1rem !important; /* 16px */
+    margin-bottom: var(--space-3);
+    margin-top: var(--space-4);
+  }
+  
+  .footer-link {
+    padding: var(--space-2) 0;
+    font-size: 0.9375rem; /* 15px */
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .footer-bottom {
+    font-size: 0.875rem; /* 14px */
+    padding-top: var(--space-4);
+    margin-top: var(--space-6);
+  }
+}
+
+/* ===================================
+   MOBILE GRID SYSTEM
+   =================================== */
+
+/* Bootstrap grid overrides for mobile */
+@media (max-width: 767px) {
+  .row {
+    margin-left: calc(var(--space-2) * -1);
+    margin-right: calc(var(--space-2) * -1);
+  }
+  
+  .row > * {
+    padding-left: var(--space-2);
+    padding-right: var(--space-2);
+  }
+  
+  /* All columns full-width on mobile */
+  .col,
+  [class*="col-"] {
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 100%;
+  }
+  
+  /* Gap utilities */
+  .g-3,
+  .g-4,
+  .g-5 {
+    --bs-gutter-y: var(--space-3);
+    --bs-gutter-x: var(--space-3);
+  }
+}
+
+/* ===================================
+   MOBILE SPACING UTILITIES
+   =================================== */
+
+/* Reduce spacing on mobile */
+@media (max-width: 767px) {
+  .mb-5,
+  .my-5 {
+    margin-bottom: var(--space-4) !important;
+  }
+  
+  .mt-5,
+  .my-5 {
+    margin-top: var(--space-4) !important;
+  }
+  
+  .pb-5,
+  .py-5 {
+    padding-bottom: var(--space-4) !important;
+  }
+  
+  .pt-5,
+  .py-5 {
+    padding-top: var(--space-4) !important;
+  }
+  
+  .p-5 {
+    padding: var(--space-4) !important;
+  }
+}
+
+/* ===================================
+   MOBILE IMAGES & MEDIA
+   =================================== */
+
+/* All images responsive */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Prevent layout shift */
+img[width][height] {
+  height: auto;
+}
+
+/* Lazy loading support */
+img[loading="lazy"] {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+img[loading="lazy"].loaded {
+  opacity: 1;
+}
+
+/* Picture element support */
+picture {
+  display: block;
+  max-width: 100%;
+}
+
+/* Maintain aspect ratios */
+.ratio {
+  position: relative;
+  width: 100%;
+}
+
+.ratio::before {
+  display: block;
+  padding-top: var(--bs-aspect-ratio);
+  content: "";
+}
+
+.ratio > * {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ===================================
+   MOBILE ACCESSIBILITY
+   =================================== */
+
+/* Focus indicators: clear on all devices */
+*:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* Skip to content link */
+.skip-to-content {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background-color: var(--color-primary);
+  color: white;
+  padding: var(--space-4);
+  text-decoration: none;
+  font-weight: 600;
+  z-index: 10000;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ===================================
+   MOBILE PERFORMANCE
+   =================================== */
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* GPU acceleration for transforms */
+.btn,
+.card,
+.plan-dossier-card {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* ===================================
+   MOBILE TOUCH IMPROVEMENTS
+   =================================== */
+
+/* Remove tap highlight color */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Prevent overscroll bounce on iOS */
+body {
+  overscroll-behavior-y: none;
+}
+
+/* Touch-friendly link spacing */
+a {
+  padding: var(--space-1);
+  margin: calc(var(--space-1) * -1);
+}
+
+/* ===================================
+   MOBILE SAFE AREAS (iPhone notch, etc.)
+   =================================== */
+
+/* Respect safe areas on modern phones */
+@supports (padding: max(0px)) {
+  .navbar,
+  .footer,
+  .container {
+    padding-left: max(var(--space-4), env(safe-area-inset-left));
+    padding-right: max(var(--space-4), env(safe-area-inset-right));
+  }
+  
+  .navbar {
+    padding-top: max(var(--space-3), env(safe-area-inset-top));
+  }
+  
+  .footer {
+    padding-bottom: max(var(--space-4), env(safe-area-inset-bottom));
+  }
+}
+
+/* ===================================
+   LANDSCAPE MODE ADJUSTMENTS
+   =================================== */
+
+@media (max-height: 500px) and (orientation: landscape) {
+  /* Reduce vertical spacing in landscape */
+  .hero,
+  .section {
+    padding-top: var(--space-4);
+    padding-bottom: var(--space-4);
+  }
+  
+  /* Smaller hero title */
+  .hero-title {
+    font-size: 1.75rem !important;
+  }
+  
+  /* Compact navigation */
+  .navbar {
+    padding: var(--space-2) 0;
+  }
+}
+
+/* ===================================
+   PRINT STYLES (Bonus)
+   =================================== */
+
+@media print {
+  /* Hide navigation and footer */
+  .navbar,
+  .footer,
+  .btn {
+    display: none !important;
+  }
+  
+  /* Expand containers */
+  .container {
+    max-width: 100%;
+    padding: 0;
+  }
+  
+  /* Black text on white */
+  body {
+    background: white;
+    color: black;
+  }
+  
+  /* Avoid page breaks inside elements */
+  .plan-dossier-card,
+  .card,
+  .dossier-section {
+    page-break-inside: avoid;
+  }
+}
+
+/* ===================================
+   END OF MOBILE-FIRST ENHANCEMENTS
+   =================================== */

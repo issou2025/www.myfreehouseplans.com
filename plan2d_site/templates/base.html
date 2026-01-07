@@ -1,0 +1,252 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <!-- Mobile-optimized viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="{% block meta_description %}Download free house plans without dimensions. Upgrade to fully dimensioned, build-ready plans when you're ready to build.{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}free house plan, free house plans, free floor plan, house plan free, simple house plan, build-ready house plan{% endblock %}">
+    <meta name="robots" content="{% block meta_robots %}index, follow{% endblock %}">
+    <!-- Mobile theme color -->
+    <meta name="theme-color" content="#2563EB">
+    <!-- Mobile web app capable -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    
+    <!-- Favicon -->
+    {% if favicon %}
+    <link rel="icon" type="image/x-icon" href="{{ favicon.image.url }}">
+    <link rel="apple-touch-icon" href="{{ favicon.image.url }}">
+    {% endif %}
+    
+    <link rel="canonical" href="{% block canonical_url %}{{ site_base_url }}{{ request.path }}{% endblock %}">
+    <title>{% block title %}Free House Plans | {{ brand_domain }}{% endblock %}</title>
+
+    <!-- Open Graph / Social -->
+    <meta property="og:site_name" content="{{ brand_domain }}">
+    <meta property="og:title" content="{% block og_title %}Free House Plans | {{ brand_domain }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Download free house plans without dimensions. Upgrade to fully dimensioned, build-ready plans when you're ready to build.{% endblock %}">
+    <meta property="og:url" content="{{ site_base_url }}{{ request.path }}">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    {% if site_logo and site_logo.image %}
+    <meta property="og:image" content="{{ site_base_url }}{{ site_logo.image.url }}">
+    {% endif %}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}Free House Plans | {{ brand_domain }}{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Download free house plans without dimensions. Upgrade to fully dimensioned, build-ready plans when you're ready to build.{% endblock %}">
+    {% if site_logo and site_logo.image %}
+    <meta name="twitter:image" content="{{ site_base_url }}{{ site_logo.image.url }}">
+    {% endif %}
+    
+    <!-- Preconnect to Google Fonts for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    
+    <!-- Premium Design System - Architectural Studio Quality -->
+    <link rel="stylesheet" href="{% static 'css/premium-design-system.css' %}">
+    
+    <!-- Mobile-First Enhancements -->
+    <link rel="stylesheet" href="{% static 'css/mobile-enhancements.css' %}">
+    <!-- Modern theme (added) -->
+    <link rel="stylesheet" href="{% static 'css/modern-theme.css' %}">
+    
+    <!-- SEO: Alternate language links -->
+    {% get_available_languages as languages %}
+    {% get_current_language as current_lang %}
+    {% for lang_code, lang_name in languages %}
+    <link rel="alternate" hreflang="{{ lang_code }}" href="{{ site_base_url }}{{ request.path }}{% if lang_code != current_lang %}?lang={{ lang_code }}{% endif %}">
+    {% endfor %}
+    
+    {% block extra_css %}{% endblock %}
+
+    {% block structured_data %}{% endblock %}
+</head>
+<body>
+    <!-- Skip to content for accessibility -->
+    <a href="#main-content" class="skip-to-content">{% trans "Skip to main content" %}</a>
+    
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'core:home' %}" style="display: flex; align-items: center; gap: 0.5rem;">
+                {% if site_logo %}
+                    <img src="{{ site_logo.image.url }}" 
+                         alt="{{ site_logo.alt_text }}" 
+                         style="max-height: 40px; max-width: 180px; object-fit: contain;">
+                {% else %}
+                    <i class="bi bi-house-door"></i> {{ brand_name }}
+                {% endif %}
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
+                           href="{% url 'core:home' %}"
+                           {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %}>{% trans "Home" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.namespace == 'plans' %}active{% endif %}"
+                           href="{% url 'plans:list' %}"
+                           {% if request.resolver_match.namespace == 'plans' %}aria-current="page"{% endif %}>{% trans "Plans" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'faq' %}active{% endif %}"
+                           href="{% url 'core:faq' %}"
+                           {% if request.resolver_match.url_name == 'faq' %}aria-current="page"{% endif %}>{% trans "How It Works" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}"
+                           href="{% url 'core:about' %}"
+                           {% if request.resolver_match.url_name == 'about' %}aria-current="page"{% endif %}>{% trans "About" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}"
+                           href="{% url 'core:contact' %}"
+                           {% if request.resolver_match.url_name == 'contact' %}aria-current="page"{% endif %}>{% trans "Contact" %}</a>
+                    </li>
+                    <!-- Language Switcher -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-globe"></i> 
+                            {% if LANGUAGE_CODE == 'fr' %}FR{% else %}EN{% endif %}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                            <li>
+                                <form action="{% url 'set_language' %}" method="post" style="margin: 0;">
+                                    {% csrf_token %}
+                                    <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                                    <input name="language" type="hidden" value="en">
+                                    <button type="submit" class="dropdown-item {% if LANGUAGE_CODE == 'en' %}active{% endif %}">
+                                        <i class="bi bi-check-circle{% if LANGUAGE_CODE != 'en' %}-fill{% endif %}"></i> English
+                                    </button>
+                                </form>
+                            </li>
+                            <li>
+                                <form action="{% url 'set_language' %}" method="post" style="margin: 0;">
+                                    {% csrf_token %}
+                                    <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                                    <input name="language" type="hidden" value="fr">
+                                    <button type="submit" class="dropdown-item {% if LANGUAGE_CODE == 'fr' %}active{% endif %}">
+                                        <i class="bi bi-check-circle{% if LANGUAGE_CODE != 'fr' %}-fill{% endif %}"></i> Français
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h5 class="footer-title">
+                        <i class="bi bi-house-door text-primary"></i> {{ brand_name }}
+                    </h5>
+                    <p class="text-gray-300">
+                        Every plan on {{ brand_domain }} is drawn by our in-house team. Browse freely, save favorites, and download the full set the moment you decide to build.
+                    </p>
+                    <div class="mt-3">
+                        <span class="badge badge-accent">{% trans "Human-Designed" %}</span>
+                        <span class="badge badge-outline">{% trans "CAD Professional" %}</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <h6 class="footer-title">{% trans "Explore" %}</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'core:home' %}" class="footer-link"><i class="bi bi-chevron-right"></i> {% trans "Home" %}</a></li>
+                        <li><a href="{% url 'plans:list' %}" class="footer-link"><i class="bi bi-chevron-right"></i> {% trans "Plans" %}</a></li>
+                        <li><a href="{% url 'core:about' %}" class="footer-link"><i class="bi bi-chevron-right"></i> {% trans "About" %}</a></li>
+                        <li><a href="{% url 'core:contact' %}" class="footer-link"><i class="bi bi-chevron-right"></i> {% trans "Contact" %}</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <h6 class="footer-title">{% trans "Help" %}</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'core:faq' %}" class="footer-link"><i class="bi bi-chevron-right"></i> {% trans "How It Works" %}</a></li>
+                        <li><a href="{% url 'core:faq' %}#payment-instructions" class="footer-link"><i class="bi bi-chevron-right"></i> {% trans "Payment Instructions" %}</a></li>
+                        <li><a href="{% url 'core:contact' %}#whatsapp" class="footer-link"><i class="bi bi-chevron-right"></i> {% trans "WhatsApp Contact" %}</a></li>
+                        <li><a href="{% url 'core:contact' %}#email" class="footer-link"><i class="bi bi-chevron-right"></i> {% trans "Email Contact" %}</a></li>
+                        <li><a href="{% url 'orders:my_orders' %}" class="footer-link"><i class="bi bi-chevron-right"></i> {% trans "My Orders" %}</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-4 mb-4">
+                    <h6 class="footer-title">{% trans "Why Choose Us?" %}</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="bi bi-check-circle text-success"></i> {% trans "Professional CAD Designs" %}</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success"></i> {% trans "Instant Digital Download" %}</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success"></i> {% trans "No AI-Generated Plans" %}</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success"></i> {% trans "Ready for Construction" %}</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p class="mb-0">{% now "Y" as current_year %}&copy; {{ current_year }} {{ brand_domain }}. {% trans "All rights reserved." %}</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Ensure lazy-loaded images become visible as soon as they finish loading
+        document.addEventListener('DOMContentLoaded', function () {
+            var lazyImages = document.querySelectorAll('img[loading="lazy"]');
+            if (!lazyImages.length) {
+                return;
+            }
+
+            var markLoaded = function (img) {
+                if (!img.classList.contains('loaded')) {
+                    img.classList.add('loaded');
+                }
+            };
+
+            lazyImages.forEach(function (img) {
+                if (img.complete) {
+                    markLoaded(img);
+                    return;
+                }
+
+                img.addEventListener('load', function handleLoad() {
+                    markLoaded(img);
+                }, { once: true });
+
+                img.addEventListener('error', function handleError() {
+                    img.classList.add('lazy-error');
+                    markLoaded(img);
+                }, { once: true });
+            });
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us - {{ brand_domain }}{% endblock %}
+
+{% block meta_description %}Explore {{ brand_domain }} and how our studio delivers human-crafted house plans, transparent previews, and precise build-ready documents.{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<section class="py-3" style="background: var(--color-gray-50); border-bottom: 1px solid var(--color-gray-200);">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'core:home' %}"><i class="bi bi-house-door"></i> Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">About</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- Page Header -->
+<section class="page-header-tight" style="background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 50%, #BFDBFE 100%);">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="badge badge-primary mb-2">
+                    <i class="bi bi-info-circle"></i> About Us
+                </div>
+                <h1 class="display-4 fw-bold mb-2">About {{ brand_name }}</h1>
+                <p class="text-muted mb-0">Build-ready house plans prepared with care and accountability</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick navigation helpers -->
+<section class="py-3" style="background: #ffffff; border-bottom: 1px solid var(--color-gray-200);">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div class="text-muted" style="font-size: var(--text-sm);">
+                <i class="bi bi-compass"></i> See how {{ brand_name }} supports your project from first sketch to final permit.
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'plans:list' %}" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-grid-3x2"></i> Browse Plans
+                </a>
+                <a href="{% url 'core:faq' %}" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-question-circle"></i> How It Works
+                </a>
+                <a href="{% url 'core:contact' %}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-chat-dots"></i> Contact the Studio
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<section class="py-3 bg-white">
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-lg-8 mx-auto">
+                <div class="mb-3">
+                    <i class="bi bi-bullseye" style="font-size: 2.25rem; color: var(--color-primary);"></i>
+                </div>
+                <h2 class="fw-bold mb-3">Our Mission</h2>
+                <p class="lead">
+                    {{ brand_name }} prepares architectural floor plans for builders, renovators, and homeowners. Each drawing is produced by our in-house team in Autodesk Revit, reviewed for clarity, and released as a free preview before the full dimensioned set is available for purchase. You can study the layout early and upgrade when it truly fits your project.
+                </p>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="fw-bold mb-3"><i class="bi bi-star"></i> What Sets Us Apart</h2>
+                
+                <div class="card shadow-sm mb-3" style="border-left: 4px solid var(--color-primary);">
+                    <div class="card-body p-3">
+                        <div class="d-flex align-items-start">
+                            <div class="icon-box me-3" style="background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);">
+                                <i class="bi bi-person-check" style="font-size: 1.5rem; color: var(--color-primary);"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold">Human Expertise, No Shortcuts</h5>
+                                <p class="mb-0">
+                                    Experienced architects and draftsmen handle every project. We do not rely on automated plan generators; each drawing reflects practical knowledge of codes, detailing, and site coordination so you can trust every line.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mb-3" style="border-left: 4px solid var(--color-secondary);">
+                    <div class="card-body p-3">
+                        <div class="d-flex align-items-start">
+                            <div class="icon-box me-3" style="background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);">
+                                <i class="bi bi-cpu" style="font-size: 1.5rem; color: var(--color-secondary);"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold">Technical-Grade Tools</h5>
+                                <p class="mb-0">
+                                    We work in <strong>Autodesk Revit</strong> and supporting BIM workflows. That means every plan aligns with professional standards, exports cleanly, and can be shared with engineers, permit offices, and construction teams without rework.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mb-3" style="border-left: 4px solid var(--color-accent);">
+                    <div class="card-body p-3">
+                        <div class="d-flex align-items-start">
+                            <div class="icon-box me-3" style="background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);">
+                                <i class="bi bi-tools" style="font-size: 1.5rem; color: var(--color-accent);"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold">Ready for Site Teams</h5>
+                                <p class="mb-0">
+                                    Each plan is structured for field use, with clear dimensions, annotations, and references. Contractors know exactly what to expect, reducing change orders and on-site guesswork.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mb-3" style="border-left: 4px solid #10B981;">
+                    <div class="card-body p-3">
+                        <div class="d-flex align-items-start">
+                            <div class="icon-box me-3" style="background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);">
+                                <i class="bi bi-cash-coin" style="font-size: 1.5rem; color: #10B981;"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold">Transparent Pricing</h5>
+                                <p class="mb-0">
+                                    Review the free preview to confirm layout and style. When the plan is approved, purchase the premium set with full dimensions and specifications. There are no subscriptions or unexpected fees—only the files you need.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-lg-8 mx-auto">
+                <div style="background: linear-gradient(135deg, #F8FAFC 0%, #E5E7EB 100%); padding: var(--space-5); border-radius: var(--radius-xl);">
+                    <div class="mb-2">
+                        <i class="bi bi-award" style="font-size: 2.25rem; color: var(--color-primary);"></i>
+                    </div>
+                    <h2 class="fw-bold mb-3">Our Commitment to Quality</h2>
+                    <p>
+                        Construction relies on precise documents. Before publication, each plan passes a multi-step review covering dimensions, openings, load paths, and annotation clarity. We document every revision so the final files align with on-site expectations.
+                    </p>
+                    <p class="mb-0">
+                        We see every drawing set as part of your build team. The better our documents perform, the smoother your project runs, and we take that responsibility seriously.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card shadow-sm" style="background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%); border: 2px solid var(--color-primary);">
+                    <div class="card-body text-center py-3">
+                        <i class="bi bi-question-circle" style="font-size: 2.25rem; color: var(--color-primary);"></i>
+                        <h4 class="fw-bold mb-3 mt-3">Need Guidance?</h4>
+                        <p class="mb-3">Tell us about your project and we'll recommend the plan package that fits.</p>
+                        <a href="{% url 'core:contact' %}" class="btn btn-primary me-2">
+                            <i class="bi bi-envelope"></i> Contact Us
+                        </a>
+                        <a href="{% url 'core:faq' %}" class="btn btn-outline-primary">
+                            <i class="bi bi-patch-question"></i> View FAQ
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

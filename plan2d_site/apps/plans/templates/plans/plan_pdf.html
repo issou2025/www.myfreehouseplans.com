@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{{ plan.title }} · Plan Sheet</title>
+    <style>
+        :root {
+            --ink: #0f172a;
+            --muted: #475569;
+            --border: #cbd5f5;
+            --accent: #1d4ed8;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 12px;
+            color: var(--ink);
+            margin: 0;
+            padding: 32px;
+            line-height: 1.4;
+            background: #ffffff;
+        }
+        .sheet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid var(--ink);
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+        .sheet-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .sheet-header small {
+            display: block;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 999px;
+            border: 1px solid var(--ink);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .hero-image {
+            width: 100%;
+            height: 260px;
+            object-fit: contain;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px;
+            background: #f8fafc;
+            margin-bottom: 18px;
+        }
+        h2 {
+            font-size: 16px;
+            margin: 24px 0 8px;
+            border-bottom: 1px solid var(--ink);
+            padding-bottom: 4px;
+        }
+        h3 {
+            font-size: 14px;
+            margin: 16px 0 6px;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .metric {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .metric span {
+            display: block;
+            color: var(--muted);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .metric strong {
+            font-size: 16px;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+        }
+        .data-table th {
+            text-align: left;
+            font-weight: 600;
+            padding: 6px 8px;
+            width: 28%;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .data-table td {
+            padding: 6px 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        ul.highlight-list {
+            padding-left: 18px;
+            margin: 0;
+        }
+        .note-box {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            background: #f8fafc;
+            margin-bottom: 16px;
+        }
+        footer {
+            margin-top: 24px;
+            font-size: 10px;
+            color: var(--muted);
+            border-top: 1px solid var(--border);
+            padding-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <header class="sheet-header">
+        <div>
+            <span class="badge">{{ brand_domain }}</span>
+            <h1>{{ plan.title }}</h1>
+            <small>Reference {{ plan.reference }} · {{ plan.category.name }} · {{ plan.get_plan_type_display }}</small>
+        </div>
+        <div style="text-align: right;">
+            <div>Generated {{ generated_on|date:"F j, Y" }}</div>
+            <div style="color: var(--muted);">For private review only</div>
+        </div>
+    </header>
+
+    {% if primary_image_url %}
+    <img src="{{ primary_image_url }}" alt="{{ plan.title }} preview" class="hero-image">
+    {% endif %}
+
+    <section>
+        <h2>Key Figures</h2>
+        <div class="metrics-grid">
+            <div class="metric">
+                <span>Total Area (m²)</span>
+                <strong>{{ plan.total_area_sqm|default:"—" }}</strong>
+            </div>
+            <div class="metric">
+                <span>Total Area (ft²)</span>
+                <strong>{{ plan.total_area_sqft|floatformat:0|default:"—" }}</strong>
+            </div>
+            <div class="metric">
+                <span>Bedrooms</span>
+                <strong>{{ plan.bedrooms|default:"—" }}</strong>
+            </div>
+            <div class="metric">
+                <span>Bathrooms</span>
+                <strong>{{ plan.bathrooms|floatformat:1|default:"—" }}</strong>
+            </div>
+            <div class="metric">
+                <span>Floors</span>
+                <strong>{{ plan.floors|default:"—" }}</strong>
+            </div>
+            <div class="metric">
+                <span>Budget level</span>
+                <strong>{{ plan.get_budget_level_display|default:"Not specified" }}</strong>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Overview</h2>
+        <table class="data-table">
+            <tr>
+                <th>Total area</th>
+                <td>{{ plan.total_area_sqm|default:"—" }} m²</td>
+            </tr>
+            <tr>
+                <th>Suggested plot</th>
+                <td>{{ plan.suggested_plot_size|default:"Not specified" }}</td>
+            </tr>
+            <tr>
+                <th>Roof type</th>
+                <td>{{ plan.roof_type|default:"Not specified" }}</td>
+            </tr>
+            <tr>
+                <th>Wall system</th>
+                <td>{{ plan.wall_system|default:"Not specified" }}</td>
+            </tr>
+            <tr>
+                <th>Climate fit</th>
+                <td>{{ plan.climate_suitability|default:"General" }}</td>
+            </tr>
+            <tr>
+                <th>Target use</th>
+                <td>{{ plan.target_user|default:"Flexible" }}</td>
+            </tr>
+            <tr>
+                <th>Plot type</th>
+                <td>{{ plan.plot_type|default:"Universal" }}</td>
+            </tr>
+        </table>
+    </section>
+
+    {% if highlights %}
+    <section>
+        <h2>Highlights</h2>
+        <ul class="highlight-list">
+            {% for item in highlights %}
+            <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+
+    <section>
+        <h2>Description</h2>
+        <div class="note-box">
+            {{ plan.description|striptags|linebreaksbr }}
+        </div>
+    </section>
+
+    {% if plan.architect_design_notes %}
+    <section>
+        <h2>Design Notes</h2>
+        <div class="note-box">
+            {{ plan.architect_design_notes|linebreaksbr }}
+        </div>
+    </section>
+    {% endif %}
+
+    <section>
+        <h2>Free vs Build-ready</h2>
+        <table class="data-table">
+            <tr>
+                <th>Free preview</th>
+                <td>Watermarked layout without dimensions. Ideal for early orientation.</td>
+            </tr>
+            <tr>
+                <th>Build-ready set</th>
+                <td>Fully dimensioned drawings, wall systems, door and window schedules, and construction-ready notes.</td>
+            </tr>
+        </table>
+    </section>
+
+    <footer>
+        {{ brand_domain }} · {{ request.get_host|default:brand_domain }} · Confidential architectural reference. 
+        Share internally only. Contact us for a dimensioned construction set when you are ready to build.
+    </footer>
+</body>
+</html>
