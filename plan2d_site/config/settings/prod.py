@@ -37,7 +37,17 @@ if not DATABASES['default']:
 
 # Static files (serve via WhiteNoise)
 MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Use Django's STORAGES API (Django 4.2+). This ensures static URLs are
+# content-hashed (cache-busted) in production so new CSS/JS always show.
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Security settings
 SECURE_SSL_REDIRECT = True

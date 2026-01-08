@@ -292,6 +292,23 @@ footer, .bg-dark {
   color: #94A3B8 !important; /* Slate 400 */
 }
 
+/* -------------------------------------------------------------------------- */
+/* Deploy verification banner (temporary)                                      */
+/* -------------------------------------------------------------------------- */
+.deploy-confirm-banner {
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: var(--premium-primary-soft);
+  color: var(--premium-primary);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+}
+
 .footer-link--inline {
   display: inline-flex;
   align-items: center;
