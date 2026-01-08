@@ -49,6 +49,10 @@ STORAGES = {
     },
 }
 
+# Production safety: never crash the whole site if a single static file is
+# missing from the manifest (serves the unhashed path instead).
+WHITENOISE_MANIFEST_STRICT = False
+
 # Security settings
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
