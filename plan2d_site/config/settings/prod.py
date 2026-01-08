@@ -16,8 +16,12 @@ if not _secret_from_env:
 
 SECRET_KEY = _secret_from_env
 
-raw_hosts = os.getenv('ALLOWED_HOSTS') or os.getenv('DJANGO_ALLOWED_HOSTS') or ''
-ALLOWED_HOSTS = [h.strip() for h in raw_hosts.split(',') if h.strip()]
+# Allow Render service domains (no wildcard "*" in ALLOWED_HOSTS)
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '.onrender.com',
+]
 
 # Database (Render provides DATABASE_URL)
 DATABASES = {
@@ -46,8 +50,9 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 
 # CSRF
-raw_csrf = os.getenv('CSRF_TRUSTED_ORIGINS', '')
-CSRF_TRUSTED_ORIGINS = [o.strip() for o in raw_csrf.split(',') if o.strip()]
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.onrender.com',
+]
 
 # HSTS settings
 SECURE_HSTS_SECONDS = 31536000
