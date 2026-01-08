@@ -43,6 +43,39 @@
   --premium-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.08);
   --premium-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
   --premium-shadow-hover: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  /* ---------------------------------------------------------------------- */
+  /* Compatibility: map legacy tokens (main.css/mobile-enhancements.css)      */
+  /* ---------------------------------------------------------------------- */
+  /* Colors used across existing CSS */
+  --color-primary: var(--premium-primary);
+  --color-primary-dark: var(--premium-text-primary);
+  --color-primary-light: #3B82F6;
+  --color-secondary: var(--premium-accent);
+  --color-secondary-dark: var(--premium-accent-hover);
+  --color-accent: var(--premium-accent);
+  --color-accent-dark: var(--premium-accent-hover);
+
+  --color-background: var(--premium-bg-body);
+  --color-surface: var(--premium-bg-surface);
+
+  /* Radius used by mobile/layout helpers */
+  --radius-sm: var(--premium-radius-sm);
+  --radius-md: var(--premium-radius-md);
+  --radius-lg: var(--premium-radius-lg);
+  --radius-xl: var(--premium-radius-xl);
+  --radius-full: var(--premium-radius-pill);
+
+  /* Shadows used by dropdowns/cards in older CSS */
+  --shadow-sm: var(--premium-shadow-sm);
+  --shadow: var(--premium-shadow-md);
+  --shadow-md: var(--premium-shadow-md);
+  --shadow-lg: var(--premium-shadow-lg);
+  --shadow-xl: var(--premium-shadow-hover);
+
+  /* Focus ring tokens */
+  --focus-ring-color: rgba(15, 98, 254, 0.25);
+  --focus-ring-offset: 3px;
 }
 
 /* -------------------------------------------------------------------------- */
