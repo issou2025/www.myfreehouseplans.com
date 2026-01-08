@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     
     # Local apps
     'apps.core',
-    'apps.plans',
+    'plan2d_site.apps.plans.apps.PlansConfig',
     'apps.seo',
     'apps.orders',
     'apps.analytics',
