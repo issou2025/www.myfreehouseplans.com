@@ -10,6 +10,7 @@ from django.template.loader import render_to_string
 from django.utils import timezone
 from django.views.generic import ListView, DetailView
 from django.db.models import Q, F, Case, When, IntegerField
+from django.db.utils import ProgrammingError
 
 from .models import Plan, Category, PlanSlugHistory
 
@@ -39,6 +40,12 @@ class PlanListView(ListView):
 
     def get_queryset(self):
         """Get only published plans, with optional filtering."""
+        try:
+            # Touch the DB once up-front so we can fail safe if tables are missing.
+            Plan.objects.all()[:1].exists()
+        except ProgrammingError:
+            return Plan.objects.none()
+
         queryset = (
             Plan.objects.visible()
             .select_related('category', 'pack_configuration')
@@ -76,24 +83,28 @@ class PlanListView(ListView):
         result = queryset.order_by('pk').distinct()
         
         # Visibility safeguard: log if filters hide too many plans
-        total_visible = Plan.objects.visible().count()
-        filtered_count = result.count()
-        if filtered_count < total_visible:
-            hidden_count = total_visible - filtered_count
-            filters_applied = {
-                'category': filters['category'],
-                'search': filters['search'],
-                'bedrooms': filters['bedrooms'],
-                'floors': filters['floors'],
-                'plan_type': filters['plan_type'],
-                'min_area': filters['min_area_value'],
-                'max_area': filters['max_area_value'],
-            }
-            active_filters = {k: v for k, v in filters_applied.items() if v}
-            logger.info(
-                f"Plan filtering: {filtered_count}/{total_visible} plans shown. "
-                f"{hidden_count} plans hidden by filters: {active_filters}"
-            )
+        try:
+            total_visible = Plan.objects.visible().count()
+            filtered_count = result.count()
+            if filtered_count < total_visible:
+                hidden_count = total_visible - filtered_count
+                filters_applied = {
+                    'category': filters['category'],
+                    'search': filters['search'],
+                    'bedrooms': filters['bedrooms'],
+                    'floors': filters['floors'],
+                    'plan_type': filters['plan_type'],
+                    'min_area': filters['min_area_value'],
+                    'max_area': filters['max_area_value'],
+                }
+                active_filters = {k: v for k, v in filters_applied.items() if v}
+                logger.info(
+                    f"Plan filtering: {filtered_count}/{total_visible} plans shown. "
+                    f"{hidden_count} plans hidden by filters: {active_filters}"
+                )
+        except ProgrammingError:
+            # If tables are missing, just return empty list view.
+            return Plan.objects.none()
         
         return result
 
@@ -101,7 +112,10 @@ class PlanListView(ListView):
         context = super().get_context_data(**kwargs)
         
         # Add categories for filtering
-        context['categories'] = Category.objects.filter(is_active=True)
+        try:
+            context['categories'] = list(Category.objects.filter(is_active=True))
+        except ProgrammingError:
+            context['categories'] = []
 
         filters = self._get_filter_state()
         
@@ -119,7 +133,10 @@ class PlanListView(ListView):
         context['filters_querystring'] = self._build_querystring()
         
         # Visibility monitoring: track total visible plans vs displayed
-        total_visible = Plan.objects.visible().count()
+        try:
+            total_visible = Plan.objects.visible().count()
+        except ProgrammingError:
+            total_visible = 0
         paginator = context.get('paginator')
         if paginator:
             displayed_count = paginator.count
@@ -301,11 +318,14 @@ class PlanListView(ListView):
         if hasattr(self, '_featured_plans_cache'):
             return self._featured_plans_cache
 
-        featured = list(
-            Plan.objects.visible()
-            .select_related('category', 'pack_configuration')
-            .filter(featured=True)[:3]
-        )
+        try:
+            featured = list(
+                Plan.objects.visible()
+                .select_related('category', 'pack_configuration')
+                .filter(featured=True)[:3]
+            )
+        except ProgrammingError:
+            featured = []
         self._featured_plans_cache = featured
         return featured
 
@@ -325,7 +345,14 @@ class PlanListView(ListView):
         category = query.get('category', '').strip()
         category_label = ''
         if category:
-            category_label = Category.objects.filter(slug=category).values_list('name', flat=True).first() or category
+            try:
+                category_label = (
+                    Category.objects.filter(slug=category)
+                    .values_list('name', flat=True)
+                    .first()
+                ) or category
+            except ProgrammingError:
+                category_label = category
 
         search_query = query.get('q', '').strip()
 
@@ -440,6 +467,10 @@ class PlanDetailView(DetailView):
     
     def get_queryset(self):
         """Only show visible (published + not deleted) plans to public."""
+        try:
+            Plan.objects.all()[:1].exists()
+        except ProgrammingError:
+            return Plan.objects.none()
         return (
             Plan.objects.visible()
             .select_related('category', 'pack_configuration')
@@ -451,11 +482,14 @@ class PlanDetailView(DetailView):
             self.object = self.get_object()
         except Http404:
             slug = kwargs.get('slug')
-            history = (
-                PlanSlugHistory.objects.select_related('plan')
-                .filter(slug=slug)
-                .first()
-            )
+            try:
+                history = (
+                    PlanSlugHistory.objects.select_related('plan')
+                    .filter(slug=slug)
+                    .first()
+                )
+            except ProgrammingError:
+                history = None
             if history and history.plan.is_visible:
                 return HttpResponsePermanentRedirect(history.plan.get_absolute_url())
             raise
@@ -470,7 +504,11 @@ class PlanDetailView(DetailView):
         """Get plan by slug, apply localization, and increment view count."""
         plan = super().get_object()
 
-        Plan.objects.filter(pk=plan.pk).update(views_count=plan.views_count + 1)
+        try:
+            Plan.objects.filter(pk=plan.pk).update(views_count=plan.views_count + 1)
+        except ProgrammingError:
+            # If the table is missing, avoid crashing; the view will still render/404 safely.
+            pass
         plan.apply_language(getattr(self.request, 'LANGUAGE_CODE', None))
 
         return plan
@@ -479,12 +517,15 @@ class PlanDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         
         # Add related plans from same category
-        context['related_plans'] = (
-            Plan.objects.visible()
-            .select_related('category', 'pack_configuration')
-            .filter(category=self.object.category)
-            .exclude(pk=self.object.pk)[:4]
-        )
+        try:
+            context['related_plans'] = list(
+                Plan.objects.visible()
+                .select_related('category', 'pack_configuration')
+                .filter(category=self.object.category)
+                .exclude(pk=self.object.pk)[:4]
+            )
+        except ProgrammingError:
+            context['related_plans'] = []
         
         # Get primary image or first image
         primary = self.object.get_primary_image()
@@ -522,7 +563,10 @@ class PlanDetailView(DetailView):
         context = self._build_pdf_context(plan)
         html = render_to_string('plans/plan_pdf.html', context, request=self.request)
         pdf_bytes = HTML(string=html, base_url=self.request.build_absolute_uri('/')).write_pdf()
-        Plan.objects.filter(pk=plan.pk).update(downloads_count=F('downloads_count') + 1)
+        try:
+            Plan.objects.filter(pk=plan.pk).update(downloads_count=F('downloads_count') + 1)
+        except ProgrammingError:
+            pass
         response = HttpResponse(pdf_bytes, content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename={plan.slug}-plan-sheet.pdf'
         return response

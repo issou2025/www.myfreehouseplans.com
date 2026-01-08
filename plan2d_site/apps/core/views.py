@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.views import View
 from django.conf import settings
 from django.db.models import Min
+from django.db.utils import ProgrammingError
 from .forms import ContactMessageForm
 from apps.notifications.services import notify_admin_new_contact
 from apps.plans.models import Plan
@@ -21,43 +22,52 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        visible_plans = (
-            Plan.objects.visible()
-            .select_related('category')
-            .prefetch_related('images')
-            .order_by('-featured', '-created_at')
-        )
+        try:
+            visible_plans = (
+                Plan.objects.visible()
+                .select_related('category')
+                .prefetch_related('images')
+                .order_by('-featured', '-created_at')
+            )
 
-        featured = list(visible_plans.filter(featured=True)[:6])
+            featured = list(visible_plans.filter(featured=True)[:6])
 
-        if len(featured) < 6:
-            needed = 6 - len(featured)
-            fallback = visible_plans.exclude(pk__in=[plan.pk for plan in featured])[:needed]
-            featured.extend(fallback)
-
-            if fallback:
-                logger.info(
-                    "HomeView: supplementing featured plans with %s fallback plan(s) to keep the showcase visible",
-                    len(fallback)
+            if len(featured) < 6:
+                needed = 6 - len(featured)
+                fallback = list(
+                    visible_plans.exclude(pk__in=[plan.pk for plan in featured])[:needed]
                 )
+                featured.extend(fallback)
 
-        context['featured_plans'] = featured
+                if fallback:
+                    logger.info(
+                        "HomeView: supplementing featured plans with %s fallback plan(s) to keep the showcase visible",
+                        len(fallback)
+                    )
 
-        pack2_min_price = (
-            visible_plans.filter(price__gt=0)
-            .exclude(pack_2_gumroad_zip_url='')
-            .aggregate(value=Min('price'))
-            .get('value')
-        )
-        pack3_min_price = (
-            visible_plans.filter(pack_3_price__gt=0)
-            .exclude(pack_3_gumroad_zip_url='')
-            .aggregate(value=Min('pack_3_price'))
-            .get('value')
-        )
+            context['featured_plans'] = featured
 
-        context['pack2_min_price'] = pack2_min_price
-        context['pack3_min_price'] = pack3_min_price
+            pack2_min_price = (
+                visible_plans.filter(price__gt=0)
+                .exclude(pack_2_gumroad_zip_url='')
+                .aggregate(value=Min('price'))
+                .get('value')
+            )
+            pack3_min_price = (
+                visible_plans.filter(pack_3_price__gt=0)
+                .exclude(pack_3_gumroad_zip_url='')
+                .aggregate(value=Min('pack_3_price'))
+                .get('value')
+            )
+
+            context['pack2_min_price'] = pack2_min_price
+            context['pack3_min_price'] = pack3_min_price
+        except ProgrammingError:
+            # Fail-safe: homepage must render even if DB tables are not created yet.
+            context['featured_plans'] = []
+            context['pack2_min_price'] = None
+            context['pack3_min_price'] = None
+            logger.warning("HomeView: database tables missing; rendering empty homepage showcase")
         return context
 
 
