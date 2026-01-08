@@ -54,8 +54,17 @@
                     <a href="{% url 'plans:list' %}" class="btn btn-primary premium-btn-primary btn-lg">
                         <i class="bi bi-grid-3x2"></i> Browse House Plans
                     </a>
-                    <a href="#packs" class="btn btn-outline premium-btn-secondary btn-lg">
-                        <i class="bi bi-box-seam"></i> View Packs
+                    <a href="{% url 'plans:list' %}" class="btn btn-outline premium-btn-secondary btn-lg">
+                        <i class="bi bi-tags"></i> Browse Categories
+                    </a>
+                </div>
+                <div class="homepage-hero-subcta fade-in">
+                    <a href="#packs" class="homepage-hero-subcta__link">
+                        <i class="bi bi-box-seam"></i> View packs
+                    </a>
+                    <span class="homepage-hero-subcta__dot" aria-hidden="true"></span>
+                    <a href="{% url 'core:faq' %}" class="homepage-hero-subcta__link">
+                        <i class="bi bi-question-circle"></i> How downloads work
                     </a>
                 </div>
                 <p class="premium-text-secondary mt-3 mb-0">
@@ -87,7 +96,7 @@
             <div class="col-lg-5 mt-5 mt-lg-0">
                 <div class="card premium-card shadow-lg homepage-hero-card">
                     <div class="card-body premium-card-content text-center p-5">
-                        <i class="bi bi-rulers" style="font-size: 4rem; color: var(--premium-primary);"></i>
+                        <i class="bi bi-rulers homepage-hero-card__icon" aria-hidden="true"></i>
                         <h4 class="premium-card-title mt-4 mb-3">Built for real projects</h4>
                         <p class="premium-card-text premium-text-secondary">
                             Preview the free layout, then upgrade to dimensioned PDFs or professional BIM deliverables when you're ready.
@@ -107,8 +116,8 @@
                             </div>
                         </div>
                         <div class="mt-4">
-                            <a href="{% url 'core:faq' %}" class="btn btn-outline-secondary btn-sm">
-                                <i class="bi bi-question-circle"></i> How downloads work
+                            <a href="{% url 'core:contact' %}" class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-chat-dots"></i> Talk to our team
                             </a>
                         </div>
                     </div>
@@ -273,7 +282,7 @@
 </section>
 
 <!-- Featured Plans Section -->
-<section class="section premium-section featured-plans-section" style="background-color: var(--premium-surface-gray);">
+<section class="section premium-section featured-plans-section">
     <div class="container">
         <div class="featured-plans-header">
             <div>
@@ -368,17 +377,17 @@
 </section>
 
 <!-- CTA Section -->
-<section class="section premium-section" style="background: linear-gradient(135deg, var(--premium-primary-dark) 0%, var(--premium-primary) 100%); color: white;">
+<section class="section premium-section homepage-final-cta">
     <div class="container text-center">
         <h2 class="premium-h2 text-white mb-4">Ready to Start Your Project?</h2>
-        <p class="premium-text-lg mb-5" style="max-width: 600px; margin: 0 auto; opacity: 0.9;">
+        <p class="premium-text-lg mb-5 homepage-final-cta__subtitle">
             Browse our collection of professional house plans and find the perfect design for your next build.
         </p>
         <div class="d-flex gap-3 justify-content-center flex-wrap">
-            <a href="{% url 'plans:list' %}" class="btn premium-btn-lg" style="background-color: white; color: var(--premium-primary); font-weight: 600;">
+            <a href="{% url 'plans:list' %}" class="btn premium-btn-lg homepage-final-cta__primary">
                 <i class="bi bi-grid-3x2"></i> Browse All Plans
             </a>
-            <a href="{% url 'core:contact' %}" class="btn btn-outline-light premium-btn-secondary premium-btn-lg" style="border-color: white; color: white;">
+            <a href="{% url 'core:contact' %}" class="btn btn-outline-light premium-btn-secondary premium-btn-lg homepage-final-cta__secondary">
                 <i class="bi bi-envelope"></i> Contact Us
             </a>
         </div>
