@@ -5,8 +5,8 @@ services:
     plan: starter
     region: frankfurt
     autoDeploy: true
-    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
-    startCommand: python manage.py migrate --noinput && gunicorn plan2d_site.wsgi:application
+    buildCommand: pip install -r requirements.txt && python manage.py migrate --noinput && python manage.py collectstatic --noinput
+    startCommand: gunicorn plan2d_site.wsgi:application
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: plan2d_site.settings
