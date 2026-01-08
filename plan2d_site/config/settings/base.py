@@ -4,7 +4,7 @@ SEO-first architecture for a 2D house plans website.
 """
 import os
 from pathlib import Path
-from django.core.exceptions import ImproperlyConfigured
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -32,11 +32,8 @@ DEBUG = _env_bool('DEBUG', default=False)
 ALLOWED_HOSTS = _env_csv('ALLOWED_HOSTS', default=[])
 
 if not SECRET_KEY:
-    # Allow a safe dev fallback; production settings should always inject a real secret.
-    if DEBUG:
-        SECRET_KEY = 'django-insecure-development-only'
-    else:
-        raise ImproperlyConfigured('SECRET_KEY environment variable is required when DEBUG is False')
+    # Dev fallback only. Production settings must enforce a real secret.
+    SECRET_KEY = 'django-insecure-development-only'
 
 
 # Application definition
@@ -100,12 +97,22 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/stable/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+_db_url = (os.getenv('DATABASE_URL') or '').strip()
+if _db_url:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=_db_url,
+            conn_max_age=600,
+            ssl_require=False,
+        )
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation

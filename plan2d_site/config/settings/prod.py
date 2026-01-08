@@ -10,7 +10,11 @@ from django.core.exceptions import ImproperlyConfigured
 DEBUG = False
 
 # Env compatibility: accept both Render-style names and legacy DJANGO_* names.
-SECRET_KEY = os.getenv('SECRET_KEY') or os.getenv('DJANGO_SECRET_KEY') or SECRET_KEY
+_secret_from_env = os.getenv('SECRET_KEY') or os.getenv('DJANGO_SECRET_KEY')
+if not _secret_from_env:
+    raise ImproperlyConfigured('SECRET_KEY environment variable is required in production')
+
+SECRET_KEY = _secret_from_env
 
 raw_hosts = os.getenv('ALLOWED_HOSTS') or os.getenv('DJANGO_ALLOWED_HOSTS') or ''
 ALLOWED_HOSTS = [h.strip() for h in raw_hosts.split(',') if h.strip()]
